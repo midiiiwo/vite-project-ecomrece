@@ -459,7 +459,7 @@ export default function Home() {
                           $99.99
                         </span>
                         <button
-                          onClick={() => handleAddToCart}
+                          onClick={handleAddToCart}
                           className="px-6 py-2 rounded-full text-white font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg"
                           style={{
                             background: currentTheme.gradient,
