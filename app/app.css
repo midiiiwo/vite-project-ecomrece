@@ -7,10 +7,16 @@
 }
 
 :root {
-  --theme-primary: #1e40af;
-  --theme-secondary: #000000;
+  /* Brand Colors */
+  --color-black: #0b0b0b;
+  --color-blue: #0f62fe;
+  --color-white: #ffffff;
+  --color-golden-brown: #b8860b;
+
+  /* Theme Variables (updated dynamically) */
   --theme-accent: #b8860b;
-  --theme-gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  --theme-foreground: #0b0b0b;
+  --theme-gradient: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
 }
 
 html,
@@ -62,6 +68,16 @@ body {
   }
 }
 
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
 .animate-fade-in {
   animation: fade-in 0.8s ease-out forwards;
 }
@@ -109,5 +125,16 @@ body {
 * {
   transition-property: color, background-color, border-color;
   transition-duration: 0.7s;
-  transition-timing-function: ease-in-out;
+  transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
