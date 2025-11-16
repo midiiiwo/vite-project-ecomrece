@@ -40,10 +40,10 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex flex-col">
+    <div className="min-h-screen relative flex flex-col bg-white">
       {/* Animated Background */}
       <div
-        className="fixed inset-0 transition-all duration-1000 ease-in-out"
+        className="fixed inset-0 transition-all duration-1000 ease-in-out -z-10"
         style={{
           background: currentTheme.gradient,
           opacity: 0.05,
@@ -52,22 +52,22 @@ export default function Contact() {
 
       {/* Header */}
       <header
-        className="relative z-10 transition-all duration-700 ease-in-out"
+        className="relative z-20 transition-all duration-700 ease-in-out sticky top-0"
         style={{
           background: `linear-gradient(to bottom, ${currentTheme.primary}15, transparent)`,
         }}
       >
-        <div className="container mx-auto px-6 py-8">
+        <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
           <div className="flex items-center justify-between">
             <Link to="/">
               <h1
-                className="text-4xl font-bold transition-all duration-700 hover:scale-105"
+                className="text-2xl sm:text-4xl font-bold transition-all duration-700 hover:scale-105"
                 style={{ color: currentTheme.primary }}
               >
                 LuxeShop
               </h1>
             </Link>
-            <nav className="flex gap-8 items-center">
+            <nav className="flex gap-4 sm:gap-8 items-center text-sm sm:text-base">
               <Link
                 to="/"
                 className="text-gray-700 hover:text-gray-900 transition-colors"
@@ -99,32 +99,32 @@ export default function Contact() {
       </header>
 
       {/* Main Content */}
-      <main className="relative z-10 flex-1 container mx-auto px-6 py-16">
-        <div className="max-w-6xl mx-auto">
+      <main className="relative z-10 flex-1 container mx-auto px-4 sm:px-6 py-8 sm:py-16 w-full">
+        <div className="max-w-6xl mx-auto w-full">
           {/* Page Header */}
-          <div className="text-center mb-16 animate-fade-in">
+          <div className="text-center mb-12 sm:mb-16 animate-fade-in">
             <h2
-              className="text-6xl font-bold mb-6 transition-all duration-700"
+              className="text-4xl sm:text-6xl font-bold mb-4 sm:mb-6 transition-all duration-700"
               style={{ color: currentTheme.primary }}
             >
               Get In Touch
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-lg sm:text-xl text-gray-600">
               We'd love to hear from you. Send us a message!
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
             {/* Contact Form */}
             <div
-              className="rounded-3xl p-8 transition-all duration-700"
+              className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 transition-all duration-700"
               style={{
                 background: `linear-gradient(135deg, ${currentTheme.primary}10, ${currentTheme.accent}10)`,
                 border: `2px solid ${currentTheme.primary}30`,
               }}
             >
               <h3
-                className="text-3xl font-bold mb-6 transition-colors duration-700"
+                className="text-2xl sm:text-3xl font-bold mb-6 transition-colors duration-700"
                 style={{ color: currentTheme.primary }}
               >
                 Send us a Message
@@ -144,7 +144,7 @@ export default function Contact() {
                     viewBox="0 0 24 24"
                     strokeWidth={2}
                     stroke="currentColor"
-                    className="w-16 h-16 mx-auto mb-4"
+                    className="w-12 sm:w-16 h-12 sm:h-16 mx-auto mb-4"
                   >
                     <path
                       strokeLinecap="round"
@@ -152,11 +152,11 @@ export default function Contact() {
                       d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                     />
                   </svg>
-                  <h4 className="text-xl font-bold mb-2">Message Sent!</h4>
+                  <h4 className="text-lg sm:text-xl font-bold mb-2">Message Sent!</h4>
                   <p>We'll get back to you soon.</p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                   <div>
                     <label
                       htmlFor="name"
@@ -171,15 +171,17 @@ export default function Contact() {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                      className="w-full px-4 py-3 rounded-lg sm:rounded-xl border-2 bg-white focus:outline-none transition-all duration-300"
                       style={{
-                        borderColor: `${currentTheme.primary}30`,
+                        borderColor: `${currentTheme.primary}50`,
                       }}
                       onFocus={(e) => {
                         e.target.style.borderColor = currentTheme.primary;
+                        e.target.style.boxShadow = `0 0 0 3px ${currentTheme.primary}15`;
                       }}
                       onBlur={(e) => {
-                        e.target.style.borderColor = `${currentTheme.primary}30`;
+                        e.target.style.borderColor = `${currentTheme.primary}50`;
+                        e.target.style.boxShadow = "none";
                       }}
                     />
                   </div>
@@ -198,15 +200,17 @@ export default function Contact() {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                      className="w-full px-4 py-3 rounded-lg sm:rounded-xl border-2 bg-white focus:outline-none transition-all duration-300"
                       style={{
-                        borderColor: `${currentTheme.primary}30`,
+                        borderColor: `${currentTheme.primary}50`,
                       }}
                       onFocus={(e) => {
                         e.target.style.borderColor = currentTheme.primary;
+                        e.target.style.boxShadow = `0 0 0 3px ${currentTheme.primary}15`;
                       }}
                       onBlur={(e) => {
-                        e.target.style.borderColor = `${currentTheme.primary}30`;
+                        e.target.style.borderColor = `${currentTheme.primary}50`;
+                        e.target.style.boxShadow = "none";
                       }}
                     />
                   </div>
@@ -225,15 +229,17 @@ export default function Contact() {
                       value={formData.subject}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300"
+                      className="w-full px-4 py-3 rounded-lg sm:rounded-xl border-2 bg-white focus:outline-none transition-all duration-300"
                       style={{
-                        borderColor: `${currentTheme.primary}30`,
+                        borderColor: `${currentTheme.primary}50`,
                       }}
                       onFocus={(e) => {
                         e.target.style.borderColor = currentTheme.primary;
+                        e.target.style.boxShadow = `0 0 0 3px ${currentTheme.primary}15`;
                       }}
                       onBlur={(e) => {
-                        e.target.style.borderColor = `${currentTheme.primary}30`;
+                        e.target.style.borderColor = `${currentTheme.primary}50`;
+                        e.target.style.boxShadow = "none";
                       }}
                     />
                   </div>
@@ -251,23 +257,25 @@ export default function Contact() {
                       value={formData.message}
                       onChange={handleChange}
                       required
-                      rows={6}
-                      className="w-full px-4 py-3 rounded-xl border-2 focus:outline-none transition-all duration-300 resize-none"
+                      rows={5}
+                      className="w-full px-4 py-3 rounded-lg sm:rounded-xl border-2 bg-white focus:outline-none transition-all duration-300 resize-none"
                       style={{
-                        borderColor: `${currentTheme.primary}30`,
+                        borderColor: `${currentTheme.primary}50`,
                       }}
                       onFocus={(e) => {
                         e.target.style.borderColor = currentTheme.primary;
+                        e.target.style.boxShadow = `0 0 0 3px ${currentTheme.primary}15`;
                       }}
                       onBlur={(e) => {
-                        e.target.style.borderColor = `${currentTheme.primary}30`;
+                        e.target.style.borderColor = `${currentTheme.primary}50`;
+                        e.target.style.boxShadow = "none";
                       }}
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full py-4 rounded-full text-white font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                    className="w-full py-3 sm:py-4 rounded-full text-white font-semibold text-base sm:text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
                     style={{ background: currentTheme.gradient }}
                   >
                     Send Message
@@ -277,9 +285,9 @@ export default function Contact() {
             </div>
 
             {/* Contact Info */}
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               <div
-                className="p-8 rounded-2xl transition-all duration-700"
+                className="p-6 sm:p-8 rounded-xl sm:rounded-2xl transition-all duration-700"
                 style={{
                   background: `linear-gradient(135deg, ${currentTheme.primary}15, ${currentTheme.accent}15)`,
                   border: `2px solid ${currentTheme.primary}20`,
@@ -287,7 +295,7 @@ export default function Contact() {
               >
                 <div className="flex items-start gap-4">
                   <div
-                    className="p-3 rounded-full transition-colors duration-700"
+                    className="p-3 rounded-full transition-colors duration-700 flex-shrink-0"
                     style={{
                       background: `${currentTheme.primary}20`,
                       color: currentTheme.primary,
@@ -309,14 +317,14 @@ export default function Contact() {
                     </svg>
                   </div>
                   <div>
-                    <h4 className="font-bold text-lg mb-1">Email</h4>
-                    <p className="text-gray-600">support@luxeshop.com</p>
+                    <h4 className="font-bold text-base sm:text-lg mb-1">Email</h4>
+                    <p className="text-gray-600 text-sm sm:text-base">support@luxeshop.com</p>
                   </div>
                 </div>
               </div>
 
               <div
-                className="p-8 rounded-2xl transition-all duration-700"
+                className="p-6 sm:p-8 rounded-xl sm:rounded-2xl transition-all duration-700"
                 style={{
                   background: `linear-gradient(135deg, ${currentTheme.primary}15, ${currentTheme.accent}15)`,
                   border: `2px solid ${currentTheme.primary}20`,
@@ -324,7 +332,7 @@ export default function Contact() {
               >
                 <div className="flex items-start gap-4">
                   <div
-                    className="p-3 rounded-full transition-colors duration-700"
+                    className="p-3 rounded-full transition-colors duration-700 flex-shrink-0"
                     style={{
                       background: `${currentTheme.primary}20`,
                       color: currentTheme.primary,
@@ -346,14 +354,14 @@ export default function Contact() {
                     </svg>
                   </div>
                   <div>
-                    <h4 className="font-bold text-lg mb-1">Phone</h4>
-                    <p className="text-gray-600">+1 (555) 123-4567</p>
+                    <h4 className="font-bold text-base sm:text-lg mb-1">Phone</h4>
+                    <p className="text-gray-600 text-sm sm:text-base">+1 (555) 123-4567</p>
                   </div>
                 </div>
               </div>
 
               <div
-                className="p-8 rounded-2xl transition-all duration-700"
+                className="p-6 sm:p-8 rounded-xl sm:rounded-2xl transition-all duration-700"
                 style={{
                   background: `linear-gradient(135deg, ${currentTheme.primary}15, ${currentTheme.accent}15)`,
                   border: `2px solid ${currentTheme.primary}20`,
@@ -361,7 +369,7 @@ export default function Contact() {
               >
                 <div className="flex items-start gap-4">
                   <div
-                    className="p-3 rounded-full transition-colors duration-700"
+                    className="p-3 rounded-full transition-colors duration-700 flex-shrink-0"
                     style={{
                       background: `${currentTheme.primary}20`,
                       color: currentTheme.primary,
@@ -388,8 +396,8 @@ export default function Contact() {
                     </svg>
                   </div>
                   <div>
-                    <h4 className="font-bold text-lg mb-1">Address</h4>
-                    <p className="text-gray-600">
+                    <h4 className="font-bold text-base sm:text-lg mb-1">Address</h4>
+                    <p className="text-gray-600 text-sm sm:text-base">
                       123 Luxury Street
                       <br />
                       Shopping District, NY 10001
@@ -399,19 +407,19 @@ export default function Contact() {
               </div>
 
               <div
-                className="p-8 rounded-2xl transition-all duration-700"
+                className="p-6 sm:p-8 rounded-xl sm:rounded-2xl transition-all duration-700"
                 style={{
                   background: `linear-gradient(135deg, ${currentTheme.primary}15, ${currentTheme.accent}15)`,
                   border: `2px solid ${currentTheme.primary}20`,
                 }}
               >
-                <h4 className="font-bold text-lg mb-4">Follow Us</h4>
+                <h4 className="font-bold text-base sm:text-lg mb-4">Follow Us</h4>
                 <div className="flex gap-4">
                   {["Facebook", "Twitter", "Instagram"].map((social) => (
                     <a
                       key={social}
                       href="#"
-                      className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
                       style={{
                         background: `${currentTheme.primary}15`,
                         color: currentTheme.primary,
@@ -419,7 +427,7 @@ export default function Contact() {
                     >
                       <span className="sr-only">{social}</span>
                       <svg
-                        className="w-6 h-6"
+                        className="w-5 h-5 sm:w-6 sm:h-6"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                       >
@@ -436,13 +444,13 @@ export default function Contact() {
 
       {/* Footer */}
       <footer
-        className="relative z-10 mt-auto py-8 transition-all duration-700"
+        className="relative z-10 py-6 sm:py-8 transition-all duration-700 mt-auto"
         style={{
           background: `linear-gradient(to top, ${currentTheme.primary}15, transparent)`,
         }}
       >
-        <div className="container mx-auto px-6 text-center">
-          <p className="text-gray-600">
+        <div className="container mx-auto px-4 sm:px-6 text-center">
+          <p className="text-gray-600 text-sm sm:text-base">
             &copy; 2025 LuxeShop. All rights reserved.
           </p>
         </div>
