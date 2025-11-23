@@ -1,43 +1,47 @@
 import { Link } from "react-router";
 import { motion } from "framer-motion";
-import {
-  Squares2X2Icon,
-  ShoppingBagIcon,
-  Cog6ToothIcon,
-  ArrowRightOnRectangleIcon,
-} from "@heroicons/react/24/outline";
+import { BsBoxArrowRight } from "react-icons/bs";
+import { GrCodeSandbox } from "react-icons/gr";
+import { RxDashboard } from "react-icons/rx";
+import { IoSettingsOutline } from "react-icons/io5";
 
 interface AdminNavProps {
   currentTab: "dashboard" | "products" | "settings";
 }
 
 export function AdminNav({ currentTab }: AdminNavProps) {
-  const navItems = [
+  const navItems: Array<{
+    id: string;
+    label: string;
+    icon: React.ReactNode;
+    href: string;
+    color: string;
+  }> = [
     {
       id: "dashboard",
       label: "Dashboard",
-      icon: Squares2X2Icon,
+      icon: <RxDashboard />,
       href: "/admin",
       color: "from-purple-500 to-indigo-600",
     },
     {
       id: "products",
       label: "Products",
-      icon: ShoppingBagIcon,
+      icon: <GrCodeSandbox />,
       href: "/admin/products",
       color: "from-blue-500 to-cyan-600",
     },
     {
       id: "settings",
       label: "Settings",
-      icon: Cog6ToothIcon,
+      icon: <IoSettingsOutline />,
       href: "/admin/settings",
       color: "from-orange-500 to-red-600",
     },
   ];
 
   return (
-    <aside className="w-64 bg-gradient-to-b from-gray-900 via-gray-900 to-black text-white min-h-screen flex flex-col border-r border-gray-800">
+    <aside className="fixed left-0 top-0 w-64 bg-gradient-to-b from-gray-900 via-gray-900 to-black text-white min-h-screen flex flex-col border-r border-gray-800 z-40">
       {/* Logo */}
       <div className="p-6 border-b border-gray-800/50">
         <div className="flex items-center gap-2 mb-2">
@@ -53,7 +57,7 @@ export function AdminNav({ currentTab }: AdminNavProps) {
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-2">
-        {navItems.map(({ id, label, icon: Icon, href, color }) => {
+        {navItems.map(({ id, label, icon, href, color }) => {
           const isActive = currentTab === id;
           return (
             <motion.div key={id} whileHover={{ x: 2 }} transition={{ duration: 0.2 }}>
@@ -74,7 +78,7 @@ export function AdminNav({ currentTab }: AdminNavProps) {
                     transition={{ duration: 0.3 }}
                   />
                 )}
-                <Icon className="w-5 h-5 relative z-10" />
+                <div className="w-5 h-5 relative z-10 flex items-center justify-center">{icon}</div>
                 <span className="relative z-10">{label}</span>
               </Link>
             </motion.div>
@@ -88,7 +92,7 @@ export function AdminNav({ currentTab }: AdminNavProps) {
           to="/"
           className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all duration-300 w-full group"
         >
-          <ArrowRightOnRectangleIcon className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+          <BsBoxArrowRight className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span>Back to Shop</span>
         </Link>
       </div>

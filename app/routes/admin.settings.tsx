@@ -16,7 +16,7 @@ export default function AdminSettings() {
     <div className="flex min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
       <AdminNav currentTab="settings" />
 
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto ml-64">
         <div className="p-8">
           <div className="max-w-7xl">
             <div className="mb-8">

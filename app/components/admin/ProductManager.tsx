@@ -6,12 +6,13 @@ import { ProductForm } from "./ProductForm";
 import type { Product } from "../../stores/useStore";
 
 export function ProductManager() {
-  const { products, addProduct, updateProduct, deleteProduct } =
-    useAdminStore();
+  const { products, addProduct, updateProduct, deleteProduct } = useAdminStore();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; productId: string | null }>({ isOpen: false, productId: null });
+  const [toast, setToast] = useState<{ isOpen: boolean; message: string }>({ isOpen: false, message: "" });
 
   const editingProduct = editingId
     ? products.find((p) => p.id === editingId)
@@ -43,13 +44,23 @@ export function ProductManager() {
   };
 
   const handleDelete = (id: string) => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this product? This action cannot be undone."
-      )
-    ) {
-      deleteProduct(id);
+    setDeleteConfirm({ isOpen: true, productId: id });
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfirm.productId) {
+      deleteProduct(deleteConfirm.productId);
+      setDeleteConfirm({ isOpen: false, productId: null });
+      setToast({ isOpen: true, message: "Product deleted successfully!" });
+      
+      setTimeout(() => {
+        setToast({ isOpen: false, message: "" });
+      }, 5000);
     }
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirm({ isOpen: false, productId: null });
   };
 
   const handleEditClick = (product: Product) => {
@@ -63,7 +74,9 @@ export function ProductManager() {
   };
 
   return (
-    <div className="space-y-6">
+    <>
+      <main className="flex-1 overflow-auto ml-64">
+      <div className="space-y-6 p-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -231,6 +244,69 @@ export function ProductManager() {
           </div>
         )}
       </div>
-    </div>
+      </div>
+      </main>
+
+      {/* Delete Confirmation Modal */}
+      <AnimatePresence>
+        {deleteConfirm.isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={cancelDelete}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-gray-800/95 border border-gray-700/50 rounded-2xl shadow-2xl max-w-sm w-full backdrop-blur"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6 border-b border-gray-700/50 bg-gradient-to-r from-red-900/20 to-orange-900/20">
+                <h2 className="text-2xl font-bold text-white">Delete Product?</h2>
+              </div>
+              <div className="p-6">
+                <p className="text-gray-300 mb-6">
+                  Are you sure you want to delete this product? This action cannot be undone.
+                </p>
+                <div className="flex gap-3 justify-end">
+                  <button
+                    onClick={cancelDelete}
+                    className="px-4 py-2 border border-gray-600/50 text-gray-300 rounded-lg hover:bg-gray-700/50 transition-colors backdrop-blur"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmDelete}
+                    className="px-4 py-2 bg-gradient-to-r from-red-600 to-orange-600 text-white rounded-lg hover:from-red-700 hover:to-orange-700 transition-all shadow-lg hover:shadow-red-500/30"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Success Toast */}
+      <AnimatePresence>
+        {toast.isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="fixed bottom-8 right-8 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3"
+          >
+            <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center">
+              <span className="text-green-600 font-bold text-sm">✓</span>
+            </div>
+            <span className="font-medium">{toast.message}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
