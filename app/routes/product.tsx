@@ -25,7 +25,7 @@ export default function Product() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { theme } = useApplyTheme();
-  const { addItem, openCart } = useCartStore();
+  const { addItem, openCart, getItemCount } = useCartStore();
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -84,13 +84,21 @@ export default function Product() {
 
             <button
               onClick={openCart}
-              className="p-3 rounded-full transition-all duration-300 hover:scale-110"
+              className="p-3 rounded-full transition-all duration-300 hover:scale-110 relative"
               style={{
                 background: `${theme.accent}15`,
                 color: theme.accent,
               }}
             >
               <ShoppingCartIcon className="w-6 h-6" />
+              {getItemCount() > 0 && (
+                <span
+                  className="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs text-white font-bold animate-pulse"
+                  style={{ background: theme.accent }}
+                >
+                  {getItemCount()}
+                </span>
+              )}
             </button>
           </div>
         </div>
@@ -161,7 +169,7 @@ export default function Product() {
                 className="text-4xl font-bold"
                 style={{ color: theme.accent }}
               >
-                ${product.price.toFixed(2)}
+                GHC {product.price.toFixed(2)}
               </span>
               <button
                 onClick={() => setIsFavorite(!isFavorite)}

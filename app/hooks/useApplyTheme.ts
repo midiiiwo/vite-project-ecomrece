@@ -9,12 +9,16 @@ export function useApplyTheme() {
   const theme = categoryThemes[activeCategory];
 
   useEffect(() => {
-    // Apply theme colors to CSS variables
     const root = document.documentElement;
 
-    root.style.setProperty("--theme-accent", theme.accent);
-    root.style.setProperty("--theme-foreground", theme.foreground);
-    root.style.setProperty("--theme-gradient", theme.gradient);
+    // smooth & stable theme updates (good for large desktop sections)
+    const frame = requestAnimationFrame(() => {
+      root.style.setProperty("--theme-accent", theme.accent);
+      root.style.setProperty("--theme-foreground", theme.foreground);
+      root.style.setProperty("--theme-gradient", theme.gradient);
+    });
+
+    return () => cancelAnimationFrame(frame);
   }, [theme]);
 
   return { theme, category: activeCategory };

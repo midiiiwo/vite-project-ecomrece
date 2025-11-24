@@ -1,36 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBagIcon } from "@heroicons/react/24/outline";
+import { PiShoppingBagFill } from "react-icons/pi";
 import { useThemeStore } from "../stores/useThemeStore";
+import { MdShoppingCart } from "react-icons/md";
 
 export function LandingTwoPanel() {
   const navigate = useNavigate();
   const { setCategory, setPreviewCategory } = useThemeStore();
-  const [hoveredPanel, setHoveredPanel] = useState<"left" | "right" | null>(
-    null
-  );
-  const [touchedPanel, setTouchedPanel] = useState<"left" | "right" | null>(
-    null
-  );
+
+  const [hoveredPanel, setHoveredPanel] = useState<"left" | "right" | null>(null);
+  const [touchedPanel, setTouchedPanel] = useState<"left" | "right" | null>(null);
 
   const handlePanelHover = (panel: "left" | "right" | null) => {
     setHoveredPanel(panel);
-    if (panel === "left") {
-      setPreviewCategory("fashion");
-    } else if (panel === "right") {
-      setPreviewCategory("electronics");
-    } else {
-      setPreviewCategory(null);
-    }
+    setPreviewCategory(panel === "left" ? "fashion" : panel === "right" ? "electronics" : null);
   };
 
   const handlePanelTouch = (panel: "left" | "right") => {
-    if (touchedPanel === panel) {
-      // Second tap - navigate
-      handleNavigate(panel);
-    } else {
-      // First tap - preview
+    if (touchedPanel === panel) handleNavigate(panel);
+    else {
       setTouchedPanel(panel);
       handlePanelHover(panel);
     }
@@ -51,21 +40,32 @@ export function LandingTwoPanel() {
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden flex flex-col md:block">
-      <style>{`
-        @media (min-width: 768px) {
-          .diagonal-left-panel {
-            clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%) !important;
-          }
-          .diagonal-right-panel {
-            clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%) !important;
-          }
-        }
-      `}</style>
+    <>
+      {/* BRAND NAME TOP RIGHT */}
+      <div className="fixed top-4 right-6 z-50">
+        <h1 className="text-2xl md:text-3xl font-bold tracking-wide text-white drop-shadow-lg">
+          Luxeshop
+        </h1>
+      </div>
+    <div className="relative w-full h-screen overflow-hidden grid grid-rows-2 md:grid-rows-1 md:grid-cols-2">
 
-      {/* Left Panel - Fashion/Clothes */}
+      {/* Desktop Diagonal Clip Paths */}
+      <style>
+        {`
+          @media (min-width: 1024px) {
+            .diagonal-left-panel {
+              clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+            }
+            .diagonal-right-panel {
+              clip-path: polygon(0 0, 100% 0, 100% 100%, 15% 100%);
+            }
+          }
+        `}
+      </style>
+
+      {/* LEFT PANEL */}
       <motion.div
-        className="relative md:absolute md:inset-0 cursor-pointer w-full h-1/2 md:h-full diagonal-left-panel"
+        className="relative cursor-pointer w-full h-full diagonal-left-panel"
         onMouseEnter={() => handlePanelHover("left")}
         onMouseLeave={() => handlePanelHover(null)}
         onClick={() => handleNavigate("left")}
@@ -77,32 +77,31 @@ export function LandingTwoPanel() {
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.3 }}
       >
-        {/* Background Gradient */}
+        {/* Background */}
         <div
           className="absolute inset-0 transition-all duration-700"
           style={{
-            background: "linear-gradient(135deg, #B8860B 0%, #DAA520 100%)",
+            background: "linear-gradient(135deg, #ce0c9dff 0%, #e6b105ff 100%)",
             opacity:
               hoveredPanel === "left" || touchedPanel === "left" ? 1 : 0.85,
           }}
         />
 
-        {/* Content */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-center px-8 text-white">
-          <motion.div
+        {/* CONTENT */}
+        <div className="relative z-10 h-full flex flex-col items-center justify-center px-6 text-white text-center">
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
+            className="text-5xl md:text-7xl font-bold mb-3"
           >
-            <h2 className="text-6xl md:text-8xl font-bold mb-4 text-center">
-              Clothes
-            </h2>
-            <p className="text-2xl md:text-3xl text-center text-white/90 mb-8">
-              Men & Ladies
-            </p>
-          </motion.div>
+            Clothes
+          </motion.h2>
+          <p className="text-xl md:text-3xl text-white/90 mb-8">
+            Men & Ladies
+          </p>
 
-          {/* Decorative Image/Illustration */}
+          {/* ICON */}
           <AnimatePresence>
             {(hoveredPanel === "left" || touchedPanel === "left") && (
               <motion.div
@@ -112,14 +111,14 @@ export function LandingTwoPanel() {
                 transition={{ duration: 0.45 }}
                 className="mb-8"
               >
-                <div className="w-64 h-64 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-                  <ShoppingBagIcon className="w-32 h-32 text-white" />
+                <div className="w-56 h-56 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                  <PiShoppingBagFill className="w-28 h-28 text-violet-800" />
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Shop Now CTA */}
+          {/* CTA BUTTON */}
           <AnimatePresence>
             {(hoveredPanel === "left" || touchedPanel === "left") && (
               <motion.button
@@ -128,7 +127,7 @@ export function LandingTwoPanel() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 whileHover={{ scale: 1.05, y: -4 }}
                 transition={{ duration: 0.3 }}
-                className="px-12 py-6 bg-white text-black font-bold text-xl rounded-full shadow-2xl hover:shadow-white/50"
+                className="px-10 py-4 bg-white text-black font-bold text-lg rounded-full shadow-2xl"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleNavigate("left");
@@ -139,20 +138,11 @@ export function LandingTwoPanel() {
             )}
           </AnimatePresence>
         </div>
-
-        {/* Diagonal Edge Highlight */}
-        <div
-          className="absolute right-0 top-0 bottom-0 w-1 bg-white/20"
-          style={{ transform: "skewY(0deg)" }}
-        />
       </motion.div>
 
-      {/* Right Panel - Electronics/Others */}
+      {/* RIGHT PANEL */}
       <motion.div
-        className="relative md:absolute md:inset-0 cursor-pointer w-full h-1/2 md:h-full diagonal-right-panel"
-        style={{
-          clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
-        }}
+        className="relative cursor-pointer w-full h-full diagonal-right-panel"
         onMouseEnter={() => handlePanelHover("right")}
         onMouseLeave={() => handlePanelHover(null)}
         onClick={() => handleNavigate("right")}
@@ -164,32 +154,31 @@ export function LandingTwoPanel() {
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.3 }}
       >
-        {/* Background Gradient */}
+        {/* Background */}
         <div
           className="absolute inset-0 transition-all duration-700"
           style={{
-            background: "linear-gradient(135deg, #0F62FE 0%, #3B82F6 100%)",
+            background: "linear-gradient(135deg, #f70814ff 0%, #0260f8ff 100%)",
             opacity:
               hoveredPanel === "right" || touchedPanel === "right" ? 1 : 0.85,
           }}
         />
 
-        {/* Content */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-center px-8 text-white">
-          <motion.div
+        {/* CONTENT */}
+        <div className="relative z-10 h-full flex flex-col items-center justify-center px-6 text-white text-center">
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
+            className="text-5xl md:text-7xl font-bold mb-3"
           >
-            <h2 className="text-6xl md:text-8xl font-bold mb-4 text-center">
-              Others
-            </h2>
-            <p className="text-2xl md:text-3xl text-center text-white/90 mb-8">
-              Electronics, Accessories & More
-            </p>
-          </motion.div>
+            Others
+          </motion.h2>
+          <p className="text-xl md:text-3xl text-white/90 mb-8">
+            Electronics, Accessories & More
+          </p>
 
-          {/* Decorative Image/Illustration */}
+          {/* ICON */}
           <AnimatePresence>
             {(hoveredPanel === "right" || touchedPanel === "right") && (
               <motion.div
@@ -199,27 +188,14 @@ export function LandingTwoPanel() {
                 transition={{ duration: 0.45 }}
                 className="mb-8"
               >
-                <div className="w-64 h-64 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-32 h-32"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"
-                    />
-                  </svg>
+                <div className="w-56 h-56 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                  <MdShoppingCart className="w-28 h-28 text-pink-600" />
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Shop Now CTA */}
+          {/* CTA BUTTON */}
           <AnimatePresence>
             {(hoveredPanel === "right" || touchedPanel === "right") && (
               <motion.button
@@ -228,7 +204,7 @@ export function LandingTwoPanel() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 whileHover={{ scale: 1.05, y: -4 }}
                 transition={{ duration: 0.3 }}
-                className="px-12 py-6 bg-white text-black font-bold text-xl rounded-full shadow-2xl hover:shadow-white/50"
+                className="px-10 py-4 bg-white text-black font-bold text-lg rounded-full shadow-2xl"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleNavigate("right");
@@ -241,5 +217,6 @@ export function LandingTwoPanel() {
         </div>
       </motion.div>
     </div>
+    </>
   );
 }
