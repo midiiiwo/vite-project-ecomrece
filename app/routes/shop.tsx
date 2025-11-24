@@ -13,6 +13,7 @@ import {
   type Category,
 } from "../stores/useThemeStore";
 import { useCartStore, type Product } from "../stores/useStore";
+import { useAdminStore } from "../stores/useAdminStore";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -24,236 +25,12 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-// Mock product data
-const mockProducts: Product[] = [
-  // Fashion products
-  {
-    id: "fashion-1",
-    name: "Premium Cotton T-Shirt",
-    price: 49.99,
-    category: "Fashion",
-    description: "Soft, breathable cotton t-shirt for everyday wear",
-    image: "",
-  },
-  {
-    id: "fashion-2",
-    name: "Designer Jeans",
-    price: 129.99,
-    category: "Fashion",
-    description: "Classic fit denim jeans with modern styling",
-    image: "",
-  },
-  {
-    id: "fashion-3",
-    name: "Leather Jacket",
-    price: 299.99,
-    category: "Fashion",
-    description: "Genuine leather jacket with premium finish",
-    image: "",
-  },
-  {
-    id: "fashion-4",
-    name: "Summer Dress",
-    price: 89.99,
-    category: "Fashion",
-    description: "Light and breezy dress perfect for summer",
-    image: "",
-  },
-  {
-    id: "fashion-5",
-    name: "Formal Shirt",
-    price: 79.99,
-    category: "Fashion",
-    description: "Crisp formal shirt for professional occasions",
-    image: "",
-  },
-  {
-    id: "fashion-6",
-    name: "Casual Blazer",
-    price: 199.99,
-    category: "Fashion",
-    description: "Versatile blazer for smart casual looks",
-    image: "",
-  },
-
-  // Electronics products
-  {
-    id: "electronics-1",
-    name: "Wireless Headphones",
-    price: 199.99,
-    category: "Electronics",
-    description: "Premium noise-cancelling wireless headphones",
-    image: "",
-  },
-  {
-    id: "electronics-2",
-    name: "Smart Speaker",
-    price: 129.99,
-    category: "Electronics",
-    description: "Voice-activated smart speaker with AI assistant",
-    image: "",
-  },
-  {
-    id: "electronics-3",
-    name: "4K Monitor",
-    price: 449.99,
-    category: "Electronics",
-    description: "Ultra HD 27-inch display for work and gaming",
-    image: "",
-  },
-  {
-    id: "electronics-4",
-    name: "Mechanical Keyboard",
-    price: 159.99,
-    category: "Electronics",
-    description: "RGB backlit mechanical gaming keyboard",
-    image: "",
-  },
-  {
-    id: "electronics-5",
-    name: "Webcam HD",
-    price: 89.99,
-    category: "Electronics",
-    description: "High definition webcam for video calls",
-    image: "",
-  },
-  {
-    id: "electronics-6",
-    name: "Portable Charger",
-    price: 49.99,
-    category: "Electronics",
-    description: "20,000mAh power bank with fast charging",
-    image: "",
-  },
-
-  // Footwear products
-  {
-    id: "footwear-1",
-    name: "Running Shoes",
-    price: 139.99,
-    category: "Footwear",
-    description: "Lightweight running shoes with excellent cushioning",
-    image: "",
-  },
-  {
-    id: "footwear-2",
-    name: "Leather Boots",
-    price: 249.99,
-    category: "Footwear",
-    description: "Durable leather boots for all seasons",
-    image: "",
-  },
-  {
-    id: "footwear-3",
-    name: "Canvas Sneakers",
-    price: 69.99,
-    category: "Footwear",
-    description: "Classic canvas sneakers in multiple colors",
-    image: "",
-  },
-  {
-    id: "footwear-4",
-    name: "Formal Shoes",
-    price: 179.99,
-    category: "Footwear",
-    description: "Elegant formal shoes for professional settings",
-    image: "",
-  },
-
-  // Accessories
-  {
-    id: "accessories-1",
-    name: "Leather Wallet",
-    price: 59.99,
-    category: "Accessories",
-    description: "Genuine leather bi-fold wallet",
-    image: "",
-  },
-  {
-    id: "accessories-2",
-    name: "Designer Sunglasses",
-    price: 149.99,
-    category: "Accessories",
-    description: "UV protection sunglasses with premium frames",
-    image: "",
-  },
-  {
-    id: "accessories-3",
-    name: "Leather Belt",
-    price: 49.99,
-    category: "Accessories",
-    description: "Classic leather belt with silver buckle",
-    image: "",
-  },
-  {
-    id: "accessories-4",
-    name: "Backpack",
-    price: 89.99,
-    category: "Accessories",
-    description: "Spacious backpack with laptop compartment",
-    image: "",
-  },
-
-  // Smart Watches
-  {
-    id: "smartwatches-1",
-    name: "Fitness Tracker",
-    price: 199.99,
-    category: "Smart Watches",
-    description: "Track your health and fitness goals",
-    image: "",
-  },
-  {
-    id: "smartwatches-2",
-    name: "Premium Smartwatch",
-    price: 399.99,
-    category: "Smart Watches",
-    description: "Full-featured smartwatch with GPS",
-    image: "",
-  },
-
-  // Fragrances
-  {
-    id: "sprays-1",
-    name: "Luxury Perfume",
-    price: 119.99,
-    category: "Fragrances",
-    description: "Elegant fragrance for special occasions",
-    image: "",
-  },
-  {
-    id: "sprays-2",
-    name: "Body Spray",
-    price: 29.99,
-    category: "Fragrances",
-    description: "Fresh daily body spray",
-    image: "",
-  },
-
-  // Children
-  {
-    id: "children-1",
-    name: "Kids T-Shirt Set",
-    price: 39.99,
-    category: "Children's Wear",
-    description: "Comfortable cotton t-shirts for kids",
-    image: "",
-  },
-  {
-    id: "children-2",
-    name: "Kids Sneakers",
-    price: 59.99,
-    category: "Children's Wear",
-    description: "Durable and stylish sneakers for active kids",
-    image: "",
-  },
-];
-
 export default function Shop() {
   const [searchParams] = useSearchParams();
   const { theme, category } = useApplyTheme();
   const { setCategory } = useThemeStore();
   const { openCart, getItemCount } = useCartStore();
+  const { products } = useAdminStore();
   const [loading, setLoading] = useState(true);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -273,7 +50,7 @@ export default function Shop() {
     setTimeout(() => {
       // Filter products by category
       const categoryName = categoryThemes[category].name;
-      const filtered = mockProducts.filter((p) =>
+      const filtered = products.filter((p) =>
         p.category
           .toLowerCase()
           .includes(categoryName.toLowerCase().split(" ")[0])
@@ -281,7 +58,7 @@ export default function Shop() {
       setFilteredProducts(filtered);
       setLoading(false);
     }, 500);
-  }, [category]);
+  }, [category, products]);
 
   const categories = Object.entries(categoryThemes) as [
     Category,

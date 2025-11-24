@@ -8,4 +8,7 @@ export default [
   route("checkout", "routes/checkout.tsx"),
   route("about", "routes/about.tsx"),
   route("contact", "routes/contact.tsx"),
+  route("admin", "routes/admin.tsx"),
+  route("admin/products", "routes/admin.products.tsx"),
+  route("admin/settings", "routes/admin.settings.tsx"),
 ] satisfies RouteConfig;

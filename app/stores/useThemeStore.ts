@@ -22,57 +22,57 @@ export type ThemeColors = {
 export const categoryThemes: Record<Category, ThemeColors> = {
   fashion: {
     name: "Fashion (Clothes)",
-    accent: "#B8860B", // Golden Brown
+    accent: "#916a0aff", // Golden Brown
     foreground: "#0B0B0B",
-    gradient: "linear-gradient(135deg, #B8860B 0%, #DAA520 100%)",
+    gradient: "linear-gradient(135deg, #916a0aff 0%, #DAA520 100%)",
   },
   electronics: {
     name: "Electronics",
-    accent: "#0F62FE", // Brand Blue
+    accent: "#aab602ff", // Greenish Yellow
     foreground: "#0B0B0B",
-    gradient: "linear-gradient(135deg, #0F62FE 0%, #3B82F6 100%)",
+    gradient: "linear-gradient(135deg, #aab602ff 0%, #589960ff 100%)",
   },
   children: {
     name: "Children's Wear",
-    accent: "#60A5FA", // Lighter Blue
+    accent: "#fa60e0ff", // Vibrant Pink
     foreground: "#0B0B0B",
-    gradient: "linear-gradient(135deg, #60A5FA 0%, #93C5FD 100%)",
+    gradient: "linear-gradient(135deg, #fa60e0ff 0%, #93C5FD 100%)",
   },
   accessories: {
     name: "Accessories",
-    accent: "#B8860B", // Golden Brown
+    accent: "#a87c0bff", // Dark Golden
     foreground: "#0B0B0B",
-    gradient: "linear-gradient(135deg, #B8860B 0%, #D4A017 100%)",
+    gradient: "linear-gradient(135deg, #a87c0bff 0%, #f8901aff 100%)",
   },
   footwear: {
     name: "Footwear",
     accent: "#0F62FE", // Brand Blue
     foreground: "#0B0B0B",
-    gradient: "linear-gradient(135deg, #0F62FE 0%, #0047AB 100%)",
+    gradient: "linear-gradient(135deg, #0F62FE 0%, #023275ff 100%)",
   },
   sprays: {
     name: "Fragrances",
-    accent: "#B8860B",
+    accent: "#b80b0bff",
     foreground: "#0B0B0B",
-    gradient: "linear-gradient(135deg, #B8860B 0%, #FFD700 100%)",
+    gradient: "linear-gradient(135deg, #b80b0bff 0%, #FFD700 100%)",
   },
   smartwatches: {
     name: "Smart Watches",
     accent: "#0F62FE",
     foreground: "#0B0B0B",
-    gradient: "linear-gradient(135deg, #0F62FE 0%, #1E40AF 100%)",
+    gradient: "linear-gradient(135deg, #0F62FE 0%, #0f0f0fff 100%)",
   },
   ipods: {
     name: "Audio Devices",
-    accent: "#0F62FE",
+    accent: "#909192ff",
     foreground: "#0B0B0B",
-    gradient: "linear-gradient(135deg, #0F62FE 0%, #60A5FA 100%)",
+    gradient: "linear-gradient(135deg, #909192ff 0%, #60A5FA 100%)",
   },
   electrical: {
     name: "Electrical Gadgets",
     accent: "#0F62FE",
     foreground: "#0B0B0B",
-    gradient: "linear-gradient(135deg, #0F62FE 0%, #3B82F6 100%)",
+    gradient: "linear-gradient(135deg, #0F62FE 0%, #e6eaf1ff 100%)",
   },
 };
 

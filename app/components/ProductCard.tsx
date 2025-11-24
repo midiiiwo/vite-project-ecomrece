@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { motion } from "framer-motion";
 import { ShoppingCartIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { useApplyTheme } from "../hooks/useApplyTheme";
 import { useCartStore, type Product } from "../stores/useStore";
+import { TbShoppingCartPlus } from "react-icons/tb";
 
 interface ProductCardProps {
   product: Product;
@@ -14,7 +15,28 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
   const { theme } = useApplyTheme();
   const { addItem, openCart } = useCartStore();
   const [isHovered, setIsHovered] = useState(false);
+  const [showButton, setShowButton] = useState(false);
 
+  // Show button only when user scrolls down
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowButton(true);
+      } else {
+        setShowButton(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // smooth scroll animation
+    });
+  };
+  
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     addItem(product);
@@ -123,28 +145,36 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             <p className="text-sm text-gray-600 mb-4 line-clamp-2">
               {product.description}
             </p>
-
-            <div className="flex items-center justify-between">
-              <span
+                <span
                 className="text-2xl font-bold transition-colors duration-300"
                 style={{ color: theme.accent }}
               >
-                ${product.price.toFixed(2)}
+                GHC {product.price.toFixed(2)}
               </span>
 
+            <div className="mt-3 flex justify-center">
               <motion.button
                 onClick={handleAddToCart}
-                className="px-6 py-2 text-white font-semibold rounded-full transition-all duration-300"
+                className="p-4 text-white font-semibold rounded-full transition-all duration-300 flex items-center gap-2"
                 style={{ background: theme.gradient }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
+                <TbShoppingCartPlus className="w-5 h-5" />
                 Add to Cart
               </motion.button>
             </div>
           </div>
         </motion.div>
       </Link>
+      {showButton && (
+        <button
+          onClick={scrollToTop} style={{ background: theme.gradient }}
+          className="fixed bottom-5 right-5 p-3 text-white rounded-full shadow-lg hover:bg-blue-700 transition"
+        >
+          ↑ Top
+        </button>
+      )}
     </motion.div>
   );
 }
