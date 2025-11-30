@@ -4,12 +4,16 @@ import { BsBoxArrowRight } from "react-icons/bs";
 import { GrCodeSandbox } from "react-icons/gr";
 import { RxDashboard } from "react-icons/rx";
 import { IoSettingsOutline } from "react-icons/io5";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useState } from "react";
 
 interface AdminNavProps {
-  currentTab: "dashboard" | "products" | "settings";
+  currentTab: "dashboard" | "products" | "settings" | "orders";
 }
 
 export function AdminNav({ currentTab }: AdminNavProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   const navItems: Array<{
     id: string;
     label: string;
@@ -32,6 +36,13 @@ export function AdminNav({ currentTab }: AdminNavProps) {
       color: "from-blue-500 to-cyan-600",
     },
     {
+      id: "orders",
+      label: "Orders",
+      icon: <GrCodeSandbox />,
+      href: "/admin/orders",
+      color: "from-green-500 to-emerald-600",
+    },
+    {
       id: "settings",
       label: "Settings",
       icon: <IoSettingsOutline />,
@@ -41,61 +52,88 @@ export function AdminNav({ currentTab }: AdminNavProps) {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 w-64 bg-gradient-to-b from-gray-900 via-gray-900 to-black text-white min-h-screen flex flex-col border-r border-gray-800 z-40">
-      {/* Logo */}
-      <div className="p-6 border-b border-gray-800/50">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">LP</span>
+    <>
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setMobileOpen(!mobileOpen)}
+        className="fixed top-4 left-4 z-50 md:hidden bg-gray-800 text-white p-2 rounded-lg"
+      >
+        {mobileOpen ? (
+          <XMarkIcon className="w-6 h-6" />
+        ) : (
+          <Bars3Icon className="w-6 h-6" />
+        )}
+      </button>
+
+      {/* Mobile Backdrop */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Sidebar Navigation */}
+      <aside className={`fixed left-0 top-0 w-64 bg-gradient-to-b from-gray-900 via-gray-900 to-black text-white min-h-screen flex flex-col border-r border-gray-800 z-40 transition-transform duration-300 md:translate-x-0 ${
+        mobileOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        {/* Logo */}
+        <div className="p-6 border-b border-gray-800/50">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">LP</span>
+            </div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+              Admin
+            </h1>
           </div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-            Admin
-          </h1>
+          <p className="text-gray-400 text-sm">LuxeShop Management</p>
         </div>
-        <p className="text-gray-400 text-sm">LuxeShop Management</p>
-      </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2">
-        {navItems.map(({ id, label, icon, href, color }) => {
-          const isActive = currentTab === id;
-          return (
-            <motion.div key={id} whileHover={{ x: 2 }} transition={{ duration: 0.2 }}>
-              <Link
-                to={href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 group relative overflow-hidden ${
-                  isActive
-                    ? `bg-gradient-to-r ${color} text-white font-semibold shadow-lg shadow-indigo-500/30`
-                    : "text-gray-300 hover:bg-gray-800/50"
-                }`}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="activeNav"
-                    className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                )}
-                <div className="w-5 h-5 relative z-10 flex items-center justify-center">{icon}</div>
-                <span className="relative z-10">{label}</span>
-              </Link>
-            </motion.div>
-          );
-        })}
-      </nav>
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-2">
+          {navItems.map(({ id, label, icon, href, color }) => {
+            const isActive = currentTab === id;
+            return (
+              <motion.div key={id} whileHover={{ x: 2 }} transition={{ duration: 0.2 }}>
+                <Link
+                  to={href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 group relative overflow-hidden ${
+                    isActive
+                      ? `bg-gradient-to-r ${color} text-white font-semibold shadow-lg shadow-indigo-500/30`
+                      : "text-gray-300 hover:bg-gray-800/50"
+                  }`}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeNav"
+                      className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
+                  <div className="w-5 h-5 relative z-10 flex items-center justify-center">{icon}</div>
+                  <span className="relative z-10">{label}</span>
+                </Link>
+              </motion.div>
+            );
+          })}
+        </nav>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-gray-800/50 space-y-2">
-        <Link
-          to="/"
-          className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all duration-300 w-full group"
-        >
-          <BsBoxArrowRight className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          <span>Back to Shop</span>
-        </Link>
-      </div>
-    </aside>
+        {/* Footer */}
+        <div className="p-4 border-t border-gray-800/50 space-y-2">
+          <Link
+            to="/"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all duration-300 w-full group"
+          >
+            <BsBoxArrowRight className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            <span>Back to Shop</span>
+          </Link>
+        </div>
+      </aside>
+    </>
   );
 }

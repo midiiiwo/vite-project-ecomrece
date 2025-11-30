@@ -34,6 +34,7 @@ export default function Shop() {
   const [loading, setLoading] = useState(true);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Get category from URL or use current theme category
   const urlCategory = searchParams.get("category") as Category | null;
@@ -50,15 +51,23 @@ export default function Shop() {
     setTimeout(() => {
       // Filter products by category
       const categoryName = categoryThemes[category].name;
-      const filtered = products.filter((p) =>
+      let filtered = products.filter((p) =>
         p.category
           .toLowerCase()
           .includes(categoryName.toLowerCase().split(" ")[0])
       );
+
+      // Filter by search query
+      if (searchQuery.trim()) {
+        filtered = filtered.filter((p) =>
+          p.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      }
+
       setFilteredProducts(filtered);
       setLoading(false);
     }, 500);
-  }, [category, products]);
+  }, [category, products, searchQuery]);
 
   const categories = Object.entries(categoryThemes) as [
     Category,
@@ -276,6 +285,17 @@ export default function Shop() {
                 {filteredProducts.length === 1 ? "product" : "products"}{" "}
                 available
               </p>
+
+              {/* Search Bar */}
+              <div className="mt-4 mb-6">
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full md:w-96 px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                />
+              </div>
             </div>
 
             <ProductGrid products={filteredProducts} loading={loading} />

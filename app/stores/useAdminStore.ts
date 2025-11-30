@@ -2,14 +2,38 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Product } from "./useStore";
 
+export type OrderStatus = "Pending" | "Completed" | "Failed";
+
+export type Order = {
+  id: string;
+  orderNumber: string;
+  customerName: string;
+  customerEmail: string;
+  totalAmount: number;
+  status: OrderStatus;
+  items: Array<{
+    productId: string;
+    productName: string;
+    quantity: number;
+    price: number;
+  }>;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 type AdminStore = {
   products: Product[];
+  orders: Order[];
   isLoading: boolean;
   error: string | null;
   addProduct: (product: Omit<Product, "id">) => void;
   updateProduct: (id: string, product: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
   getProduct: (id: string) => Product | undefined;
+  addOrder: (order: Omit<Order, "id">) => void;
+  updateOrder: (id: string, order: Partial<Order>) => void;
+  deleteOrder: (id: string) => void;
+  getOrder: (id: string) => Order | undefined;
   setError: (error: string | null) => void;
   setLoading: (loading: boolean) => void;
 };
@@ -370,6 +394,44 @@ export const useAdminStore = create<AdminStore>()(
           stock: 68,
         },
       ],
+      orders: [
+        {
+          id: "order-1",
+          orderNumber: "ORD-001",
+          customerName: "John Doe",
+          customerEmail: "john@example.com",
+          totalAmount: 299.99,
+          status: "Pending",
+          items: [
+            {
+              productId: "fashion-1",
+              productName: "Premium Cotton T-Shirt",
+              quantity: 2,
+              price: 49.99,
+            },
+          ],
+          createdAt: new Date(Date.now() - 86400000),
+          updatedAt: new Date(Date.now() - 86400000),
+        },
+        {
+          id: "order-2",
+          orderNumber: "ORD-002",
+          customerName: "Jane Smith",
+          customerEmail: "jane@example.com",
+          totalAmount: 129.99,
+          status: "Completed",
+          items: [
+            {
+              productId: "electronics-1",
+              productName: "Wireless Headphones",
+              quantity: 1,
+              price: 199.99,
+            },
+          ],
+          createdAt: new Date(Date.now() - 172800000),
+          updatedAt: new Date(Date.now() - 172800000),
+        },
+      ],
       isLoading: false,
       error: null,
 
@@ -400,6 +462,35 @@ export const useAdminStore = create<AdminStore>()(
 
       getProduct: (id) => {
         return get().products.find((product) => product.id === id);
+      },
+
+      addOrder: (orderData) => {
+        const id = `order-${Date.now()}`;
+        const newOrder: Order = {
+          ...orderData,
+          id,
+        };
+        set((state) => ({
+          orders: [...state.orders, newOrder],
+        }));
+      },
+
+      updateOrder: (id, updates) => {
+        set((state) => ({
+          orders: state.orders.map((order) =>
+            order.id === id ? { ...order, ...updates, updatedAt: new Date() } : order
+          ),
+        }));
+      },
+
+      deleteOrder: (id) => {
+        set((state) => ({
+          orders: state.orders.filter((order) => order.id !== id),
+        }));
+      },
+
+      getOrder: (id) => {
+        return get().orders.find((order) => order.id === id);
       },
 
       setError: (error) => {

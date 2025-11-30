@@ -12,7 +12,9 @@ export function ProductManager() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; productId: string | null }>({ isOpen: false, productId: null });
-  const [toast, setToast] = useState<{ isOpen: boolean; message: string }>({ isOpen: false, message: "" });
+  const [toast, setToast] = useState<{ isOpen: boolean; message: string; type: 'success' | 'error' }>({ isOpen: false, message: "", type: 'success' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const editingProduct = editingId
     ? products.find((p) => p.id === editingId)
@@ -29,10 +31,18 @@ export function ProductManager() {
     return matchesSearch && matchesCategory;
   });
 
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
   const handleAdd = (data: Omit<Product, "id">) => {
     addProduct(data);
     setIsFormOpen(false);
     setEditingId(null);
+    setToast({ isOpen: true, message: "Product added successfully!", type: 'success' });
+    setTimeout(() => setToast({ isOpen: false, message: "", type: 'success' }), 3000);
   };
 
   const handleEdit = (data: Omit<Product, "id">) => {
@@ -40,6 +50,8 @@ export function ProductManager() {
       updateProduct(editingId, data);
       setEditingId(null);
       setIsFormOpen(false);
+      setToast({ isOpen: true, message: "Product updated successfully!", type: 'success' });
+      setTimeout(() => setToast({ isOpen: false, message: "", type: 'success' }), 3000);
     }
   };
 
@@ -51,10 +63,10 @@ export function ProductManager() {
     if (deleteConfirm.productId) {
       deleteProduct(deleteConfirm.productId);
       setDeleteConfirm({ isOpen: false, productId: null });
-      setToast({ isOpen: true, message: "Product deleted successfully!" });
+      setToast({ isOpen: true, message: "Product deleted successfully!", type: 'success' });
       
       setTimeout(() => {
-        setToast({ isOpen: false, message: "" });
+        setToast({ isOpen: false, message: "", type: 'success' });
       }, 5000);
     }
   };
@@ -73,10 +85,15 @@ export function ProductManager() {
     setEditingId(null);
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reset to first page on search
+  };
+
   return (
     <>
-      <main className="flex-1 overflow-auto ml-64">
-      <div className="space-y-6 p-8">
+      <main className="flex-1 overflow-auto">
+      <div className="space-y-6 p-0 md:p-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -138,12 +155,15 @@ export function ProductManager() {
           type="text"
           placeholder="Search by product name or ID..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleSearchChange}
           className="flex-1 px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none backdrop-blur"
         />
         <select
           value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
+          onChange={(e) => {
+            setCategoryFilter(e.target.value);
+            setCurrentPage(1); // Reset to first page on filter change
+          }}
           className="px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none backdrop-blur"
         >
           <option value="">All Categories</option>
@@ -188,7 +208,7 @@ export function ProductManager() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-700/50">
-                {filteredProducts.map((product) => (
+                {paginatedProducts.map((product) => (
                   <motion.tr
                     key={product.id}
                     initial={{ opacity: 0 }}
@@ -245,6 +265,41 @@ export function ProductManager() {
         )}
       </div>
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 mt-6">
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700/50 transition-colors"
+          >
+            Previous
+          </button>
+          <div className="flex items-center gap-1">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`w-10 h-10 rounded-lg transition-all ${
+                  currentPage === page
+                    ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white'
+                    : 'bg-gray-800/50 border border-gray-700/50 text-white hover:bg-gray-700/50'
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700/50 transition-colors"
+          >
+            Next
+          </button>
+        </div>
+      )}
       </main>
 
       {/* Delete Confirmation Modal */}
@@ -298,10 +353,16 @@ export function ProductManager() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-8 right-8 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3"
+            className={`fixed bottom-8 right-8 px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3 ${
+              toast.type === 'success'
+                ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white'
+                : 'bg-gradient-to-r from-red-600 to-orange-600 text-white'
+            }`}
           >
-            <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center">
-              <span className="text-green-600 font-bold text-sm">✓</span>
+            <div className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-sm ${
+              toast.type === 'success' ? 'bg-white text-green-600' : 'bg-white text-red-600'
+            }`}>
+              {toast.type === 'success' ? '✓' : '✕'}
             </div>
             <span className="font-medium">{toast.message}</span>
           </motion.div>
