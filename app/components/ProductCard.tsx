@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { ShoppingCartIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { useApplyTheme } from "../hooks/useApplyTheme";
 import { useCartStore, type Product } from "../stores/useStore";
-import { TbShoppingCartPlus } from "react-icons/tb";
 
 interface ProductCardProps {
   product: Product;
@@ -180,7 +179,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               whileTap={{ scale: 0.95 }}
               aria-label={`Add ${product.name} to cart`}
             >
-              <TbShoppingCartPlus className="w-4 h-4 md:w-5 md:h-5" />
+              <ShoppingCartIcon className="w-4 h-4 md:w-5 md:h-5" />
               <span className="hidden sm:inline">Add</span>
             </motion.button>
           </div>

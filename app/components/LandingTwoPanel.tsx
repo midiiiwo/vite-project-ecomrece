@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
-import { PiShoppingBagFill } from "react-icons/pi";
+import { ShoppingBagIcon } from "@heroicons/react/24/solid";
 import { useThemeStore } from "../stores/useThemeStore";
 
 export function LandingTwoPanel() {
@@ -46,7 +46,7 @@ export function LandingTwoPanel() {
             className="mb-8 md:mb-12"
           >
             <div className="w-48 h-48 md:w-56 md:h-56 bg-white/10 backdrop-blur-md rounded-3xl flex items-center justify-center border border-white/20 shadow-2xl">
-              <PiShoppingBagFill className="w-28 h-28 md:w-32 md:h-32 text-white drop-shadow-lg" />
+              <ShoppingBagIcon className="w-28 h-28 md:w-32 md:h-32 text-white drop-shadow-lg" />
             </div>
           </motion.div>
 

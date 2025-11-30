@@ -1,10 +1,6 @@
 import { Link } from "react-router";
 import { motion } from "framer-motion";
-import { BsBoxArrowRight } from "react-icons/bs";
-import { GrCodeSandbox } from "react-icons/gr";
-import { RxDashboard } from "react-icons/rx";
-import { IoSettingsOutline } from "react-icons/io5";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon, ArrowRightStartOnRectangleIcon, CubeIcon, WindowIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
 interface AdminNavProps {
@@ -24,28 +20,28 @@ export function AdminNav({ currentTab }: AdminNavProps) {
     {
       id: "dashboard",
       label: "Dashboard",
-      icon: <RxDashboard />,
+      icon: <WindowIcon className="w-5 h-5" />,
       href: "/admin",
       color: "from-purple-500 to-indigo-600",
     },
     {
       id: "products",
       label: "Products",
-      icon: <GrCodeSandbox />,
+      icon: <CubeIcon className="w-5 h-5" />,
       href: "/admin/products",
       color: "from-blue-500 to-cyan-600",
     },
     {
       id: "orders",
       label: "Orders",
-      icon: <GrCodeSandbox />,
+      icon: <CubeIcon className="w-5 h-5" />,
       href: "/admin/orders",
       color: "from-green-500 to-emerald-600",
     },
     {
       id: "settings",
       label: "Settings",
-      icon: <IoSettingsOutline />,
+      icon: <Cog6ToothIcon className="w-5 h-5" />,
       href: "/admin/settings",
       color: "from-orange-500 to-red-600",
     },
@@ -129,7 +125,7 @@ export function AdminNav({ currentTab }: AdminNavProps) {
             onClick={() => setMobileOpen(false)}
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all duration-300 w-full group"
           >
-            <BsBoxArrowRight className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            <ArrowRightStartOnRectangleIcon className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             <span>Back to Shop</span>
           </Link>
         </div>

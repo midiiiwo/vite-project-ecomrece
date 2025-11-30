@@ -12,7 +12,6 @@ import "./app.css";
 import { Cart } from "./components/Cart";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { errorLogger } from "./utils/errorLogger";
-import { Suspense } from "react";
 import { useGlobalErrorHandler } from "./hooks/useGlobalErrorHandler";
 
 export const links: Route.LinksFunction = () => [

@@ -1,12 +1,7 @@
 import type { Route } from "../+types/root";
 import { AdminNav } from "../components/admin/AdminNav";
-import { BsBoxFill } from "react-icons/bs";
-import { BiSolidCategoryAlt } from "react-icons/bi";
-import { FaPlus } from "react-icons/fa6";
-import { IoIosCheckbox } from "react-icons/io";
-import { GiMoneyStack } from "react-icons/gi";
+import { CubeIcon, FolderIcon, PlusIcon, CheckIcon, CurrencyDollarIcon, DocumentTextIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 import type React from "react";
-import { IoReader, IoSettings } from "react-icons/io5";
 import { useState } from "react";
 import { ProductForm } from "../components/admin/ProductForm";
 import { useAdminStore } from "../stores/useAdminStore";
@@ -62,28 +57,28 @@ export default function AdminDashboard() {
               <StatCard 
                 label="Total Products" 
                 value="32" 
-                icon={<BsBoxFill />}
+                icon={<CubeIcon className="w-8 h-8" />}
                 gradient="from-indigo-500 to-purple-600"
                 iconColor="text-red-300"
               />
               <StatCard 
                 label="Categories" 
                 value="7" 
-                icon={<BiSolidCategoryAlt />}
+                icon={<FolderIcon className="w-8 h-8" />}
                 gradient="from-blue-500 to-cyan-600"
                 iconColor="text-blue-900"
               />
               <StatCard 
                 label="Total Value" 
                 value="$8,534.32" 
-                icon={<GiMoneyStack />}
+                icon={<CurrencyDollarIcon className="w-8 h-8" />}
                 gradient="from-emerald-500 to-green-600"
                 iconColor="text-yellow-300"
               />
               <StatCard 
                 label="Active" 
                 value="28" 
-                icon={<IoIosCheckbox />}
+                icon={<CheckIcon className="w-8 h-8" />}
                 gradient="from-orange-500 to-red-600"
                 iconColor="text-green-400"
               />
@@ -104,7 +99,7 @@ export default function AdminDashboard() {
                 <QuickActionButton
                   title="Add Product"
                   description="Create a new product"
-                  icon={<FaPlus />}
+                  icon={<PlusIcon className="w-6 h-6" />}
                   iconColor="text-amber-200"
                   onClick={() => setIsModalOpen(true)}
                 />
@@ -112,14 +107,14 @@ export default function AdminDashboard() {
                   title="View Products"
                   description="Manage your catalog"
                   href="/admin/products"
-                  icon={<IoReader />}
+                  icon={<DocumentTextIcon className="w-6 h-6" />}
                   iconColor="text-orange-300"
                 />
                 <QuickActionButton
                   title="Settings"
                   description="Configure admin panel"
                   href="/admin/settings"
-                  icon={<IoSettings />}
+                  icon={<Cog6ToothIcon className="w-6 h-6" />}
                   iconColor="text-slate-400"
                 />
               </div>
