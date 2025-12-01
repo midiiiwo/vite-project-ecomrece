@@ -192,7 +192,9 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           className="fixed bottom-5 right-5 p-2 md:p-3 text-white rounded-full shadow-lg hover:opacity-90 transition z-40 text-xs md:text-base"
           aria-label="Scroll to top"
         >
-          ↑
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
+          </svg>
         </button>
       )}
     </motion.div>

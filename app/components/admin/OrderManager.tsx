@@ -171,7 +171,7 @@ export function OrderManager() {
                       </td>
                       <td className="px-6 py-4">
                         <p className="font-semibold text-white">
-                          GHS{order.totalAmount.toFixed(2)}
+                          GHC {order.totalAmount.toFixed(2)}
                         </p>
                       </td>
                       <td className="px-6 py-4">

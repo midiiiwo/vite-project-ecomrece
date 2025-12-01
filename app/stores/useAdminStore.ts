@@ -21,9 +21,20 @@ export type Order = {
   updatedAt: Date;
 };
 
+export type AdminNotification = {
+  id: string;
+  type: "order_created" | "product_added" | "order_completed" | "order_failed";
+  title: string;
+  message: string;
+  read: boolean;
+  createdAt: Date;
+  metadata?: Record<string, unknown>;
+};
+
 type AdminStore = {
   products: Product[];
   orders: Order[];
+  notifications: AdminNotification[];
   isLoading: boolean;
   error: string | null;
   addProduct: (product: Omit<Product, "id">) => void;
@@ -34,6 +45,10 @@ type AdminStore = {
   updateOrder: (id: string, order: Partial<Order>) => void;
   deleteOrder: (id: string) => void;
   getOrder: (id: string) => Order | undefined;
+  addNotification: (notification: Omit<AdminNotification, "id" | "createdAt">) => void;
+  markNotificationAsRead: (id: string) => void;
+  clearNotifications: () => void;
+  getUnreadCount: () => number;
   setError: (error: string | null) => void;
   setLoading: (loading: boolean) => void;
 };
@@ -432,6 +447,7 @@ export const useAdminStore = create<AdminStore>()(
           updatedAt: new Date(Date.now() - 172800000),
         },
       ],
+      notifications: [],
       isLoading: false,
       error: null,
 
@@ -491,6 +507,34 @@ export const useAdminStore = create<AdminStore>()(
 
       getOrder: (id) => {
         return get().orders.find((order) => order.id === id);
+      },
+
+      addNotification: (notificationData) => {
+        const id = `notif-${Date.now()}`;
+        const newNotification: AdminNotification = {
+          ...notificationData,
+          id,
+          createdAt: new Date(),
+        };
+        set((state) => ({
+          notifications: [newNotification, ...state.notifications],
+        }));
+      },
+
+      markNotificationAsRead: (id) => {
+        set((state) => ({
+          notifications: state.notifications.map((notif) =>
+            notif.id === id ? { ...notif, read: true } : notif
+          ),
+        }));
+      },
+
+      clearNotifications: () => {
+        set({ notifications: [] });
+      },
+
+      getUnreadCount: () => {
+        return get().notifications.filter((notif) => !notif.read).length;
       },
 
       setError: (error) => {

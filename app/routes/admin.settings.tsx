@@ -16,7 +16,7 @@ export default function AdminSettings() {
     <div className="flex min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
       <AdminNav currentTab="settings" />
 
-      <main className="flex-1 overflow-auto ml-64">
+      <main className="flex-1 overflow-auto">
         <div className="p-8">
           <div className="max-w-7xl">
             <div className="mb-8">
@@ -32,33 +32,6 @@ export default function AdminSettings() {
                 <SettingField label="Store Name" value="LuxeShop" />
                 <SettingField label="Store Email" value="contact@luxeshop.com" />
                 <SettingField label="Support Email" value="support@luxeshop.com" />
-              </SettingsSection>
-
-              {/* Firebase Settings */}
-              <SettingsSection title="Firebase Integration" disabled icon="🔥">
-                <p className="text-gray-300">
-                  Firebase integration is coming soon. You'll be able to connect
-                  your Firebase project for cloud-based data storage, real-time
-                  updates, and user authentication.
-                </p>
-                <div className="mt-4 bg-blue-900/30 border border-blue-500/30 rounded-lg p-3">
-                  <p className="text-sm text-blue-300">
-                    Next: Firebase authentication, Firestore database setup, and
-                    real-time product sync.
-                  </p>
-                </div>
-              </SettingsSection>
-
-              {/* Developer Settings */}
-              <SettingsSection title="Developer" icon="⚙️">
-                <SettingField
-                  label="API Endpoint"
-                  value="https://api.luxeshop.com"
-                />
-                <SettingField
-                  label="Storage Provider"
-                  value="Local Storage"
-                />
               </SettingsSection>
             </div>
           </div>

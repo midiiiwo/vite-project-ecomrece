@@ -105,7 +105,7 @@ export function ProductForm({
       {/* Price */}
       <div>
         <label className="block text-sm font-semibold text-gray-200 mb-2">
-          Price (GHS)
+          Price (GHC)
         </label>
         <input
           type="number"

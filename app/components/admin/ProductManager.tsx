@@ -14,7 +14,7 @@ export function ProductManager() {
   const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; productId: string | null }>({ isOpen: false, productId: null });
   const [toast, setToast] = useState<{ isOpen: boolean; message: string; type: 'success' | 'error' }>({ isOpen: false, message: "", type: 'success' });
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
 
   const editingProduct = editingId
     ? products.find((p) => p.id === editingId)
@@ -221,7 +221,7 @@ export function ProductManager() {
                         <p className="font-medium text-white">
                           {product.name}
                         </p>
-                        <p className="text-sm text-gray-400">{product.id}</p>
+                        {/* <p className="text-sm text-gray-400">{product.id}</p> */}
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -231,7 +231,7 @@ export function ProductManager() {
                     </td>
                     <td className="px-6 py-4">
                       <p className="font-semibold text-white">
-                        ${product.price.toFixed(2)}
+                        GHC {product.price.toFixed(2)}
                       </p>
                     </td>
                     <td className="px-6 py-4">
