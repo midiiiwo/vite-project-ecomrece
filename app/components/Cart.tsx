@@ -2,6 +2,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useCartStore } from "../stores/useStore";
 import { useApplyTheme } from "../hooks/useApplyTheme";
+import { useAdminStore } from "../stores/useAdminStore";
+import { useNavigate } from "react-router";
+import { useState } from "react";
 
 export function Cart() {
   const {
@@ -14,6 +17,38 @@ export function Cart() {
     clearCart,
   } = useCartStore();
   const { theme } = useApplyTheme();
+  const { addNotification } = useAdminStore();
+  const navigate = useNavigate();
+  const [isNotifying, setIsNotifying] = useState(false);
+
+  const handleCheckout = () => {
+    setIsNotifying(true);
+    
+    // Trigger admin notification
+    addNotification({
+      type: "order_created",
+      title: "Customer Checkout",
+      message: `Customer initiated checkout with ${items.length} item(s) - Total: GHC ${getTotal().toFixed(2)}`,
+      read: false,
+      metadata: {
+        itemCount: items.length,
+        totalAmount: getTotal(),
+        items: items.map(item => ({
+          productId: item.id,
+          productName: item.name,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+      },
+    });
+
+    // Navigate to checkout
+    setTimeout(() => {
+      navigate("/checkout");
+      closeCart();
+      setIsNotifying(false);
+    }, 300);
+  };
 
   return (
     <AnimatePresence>
@@ -135,7 +170,7 @@ export function Cart() {
                           className="font-bold transition-colors duration-700"
                           style={{ color: theme.primary }}
                         >
-                          ${item.price.toFixed(2)}
+                          GHC {item.price.toFixed(2)}
                         </p>
 
                         {/* Quantity Controls */}
@@ -235,16 +270,18 @@ export function Cart() {
                     className="text-2xl font-bold transition-colors duration-700"
                     style={{ color: theme.primary }}
                   >
-                    ${getTotal().toFixed(2)}
+                    GHC {getTotal().toFixed(2)}
                   </span>
                 </div>
 
                 {/* Buttons */}
                 <button
-                  className="w-full py-3 rounded-full text-white font-semibold mb-3 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                  onClick={handleCheckout}
+                  disabled={isNotifying}
+                  className="w-full py-3 rounded-full text-white font-semibold mb-3 transition-all duration-300 hover:scale-105 hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
                   style={{ background: theme.gradient }}
                 >
-                  Checkout
+                  {isNotifying ? "Processing..." : "Checkout"}
                 </button>
                 <button
                   onClick={clearCart}

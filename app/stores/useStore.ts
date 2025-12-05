@@ -8,6 +8,11 @@ export type Product = {
   category: string;
   image?: string;
   description: string;
+  specs?: string[];
+  features?: string[];
+  rating?: number;
+  reviews?: number;
+  stock?: number;
 };
 
 export type CartItem = Product & {

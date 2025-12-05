@@ -34,6 +34,7 @@ export default function Shop() {
   const [loading, setLoading] = useState(true);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Get category from URL or use current theme category
   const urlCategory = searchParams.get("category") as Category | null;
@@ -50,15 +51,23 @@ export default function Shop() {
     setTimeout(() => {
       // Filter products by category
       const categoryName = categoryThemes[category].name;
-      const filtered = products.filter((p) =>
+      let filtered = products.filter((p) =>
         p.category
           .toLowerCase()
           .includes(categoryName.toLowerCase().split(" ")[0])
       );
+
+      // Filter by search query
+      if (searchQuery.trim()) {
+        filtered = filtered.filter((p) =>
+          p.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      }
+
       setFilteredProducts(filtered);
       setLoading(false);
     }, 500);
-  }, [category, products]);
+  }, [category, products, searchQuery]);
 
   const categories = Object.entries(categoryThemes) as [
     Category,
@@ -210,7 +219,7 @@ export default function Shop() {
             </div>
           </aside>
 
-          {/* Mobile Filters Drawer */}
+          {/* Mobile Navigation Drawer */}
           {mobileFiltersOpen && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -229,37 +238,42 @@ export default function Shop() {
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-bold text-gray-900">
-                    Categories
+                    LuxeShop
                   </h2>
                   <button onClick={() => setMobileFiltersOpen(false)}>
                     <XMarkIcon className="w-6 h-6" />
                   </button>
                 </div>
                 <div className="space-y-2">
-                  {categories.map(([cat, themeData]) => (
-                    <button
-                      key={cat}
-                      onClick={() => {
-                        setCategory(cat);
-                        setMobileFiltersOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 flex items-center gap-3"
-                      style={{
-                        background:
-                          category === cat
-                            ? `${themeData.accent}15`
-                            : "transparent",
-                        color: category === cat ? themeData.accent : "#374151",
-                        fontWeight: category === cat ? 600 : 400,
-                      }}
-                    >
-                      <div
-                        className="w-3 h-3 rounded-full flex-shrink-0"
-                        style={{ background: themeData.gradient }}
-                      />
-                      <span className="flex-1">{themeData.name}</span>
-                    </button>
-                  ))}
+                  <Link
+                    to="/"
+                    onClick={() => setMobileFiltersOpen(false)}
+                    className="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 flex items-center gap-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                  >
+                    Home
+                  </Link>
+                  <Link
+                    to="/shop"
+                    onClick={() => setMobileFiltersOpen(false)}
+                    className="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 flex items-center gap-3 font-semibold"
+                    style={{ color: theme.accent }}
+                  >
+                    Shop
+                  </Link>
+                  <Link
+                    to="/about"
+                    onClick={() => setMobileFiltersOpen(false)}
+                    className="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 flex items-center gap-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                  >
+                    About
+                  </Link>
+                  <Link
+                    to="/contact"
+                    onClick={() => setMobileFiltersOpen(false)}
+                    className="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 flex items-center gap-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                  >
+                    Contact
+                  </Link>
                 </div>
               </motion.div>
             </motion.div>
@@ -276,6 +290,17 @@ export default function Shop() {
                 {filteredProducts.length === 1 ? "product" : "products"}{" "}
                 available
               </p>
+
+              {/* Search Bar */}
+              <div className="mt-4 mb-6">
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full md:w-96 px-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                />
+              </div>
             </div>
 
             <ProductGrid products={filteredProducts} loading={loading} />

@@ -58,9 +58,6 @@ export function ProductForm({
     if (!formData.category) {
       newErrors.category = "Category is required";
     }
-    if (!formData.description.trim()) {
-      newErrors.description = "Description is required";
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -108,7 +105,7 @@ export function ProductForm({
       {/* Price */}
       <div>
         <label className="block text-sm font-semibold text-gray-200 mb-2">
-          Price ($)
+          Price (GHC)
         </label>
         <input
           type="number"
@@ -157,7 +154,7 @@ export function ProductForm({
       {/* Description */}
       <div>
         <label className="block text-sm font-semibold text-gray-200 mb-2">
-          Description
+          Description <span className="text-gray-400 text-xs">(optional)</span>
         </label>
         <textarea
           value={formData.description}
@@ -165,14 +162,9 @@ export function ProductForm({
             setFormData({ ...formData, description: e.target.value })
           }
           rows={4}
-          className={`w-full px-4 py-2 bg-gray-700/50 border rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none backdrop-blur ${
-            errors.description ? "border-red-500" : "border-gray-600/50"
-          }`}
-          placeholder="Enter product description"
+          className={`w-full px-4 py-2 bg-gray-700/50 border rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none backdrop-blur border-gray-600/50`}
+          placeholder="Enter product description (optional)"
         />
-        {errors.description && (
-          <p className="mt-1 text-sm text-red-400">{errors.description}</p>
-        )}
       </div>
 
       {/* Image URL */}
