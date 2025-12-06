@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { motion } from "framer-motion";
-import { Bars3Icon, XMarkIcon, ArrowRightStartOnRectangleIcon, CubeIcon, WindowIcon, Cog6ToothIcon, BellIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon, ArrowRightStartOnRectangleIcon, CubeIcon, Cog6ToothIcon, BellIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { useSidebar } from "../../contexts/SidebarContext";
 
