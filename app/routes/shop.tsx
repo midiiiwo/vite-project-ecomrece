@@ -219,7 +219,7 @@ export default function Shop() {
             </div>
           </aside>
 
-          {/* Mobile Filters Drawer */}
+          {/* Mobile Navigation Drawer */}
           {mobileFiltersOpen && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -238,37 +238,42 @@ export default function Shop() {
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-bold text-gray-900">
-                    Categories
+                    Navigation
                   </h2>
                   <button onClick={() => setMobileFiltersOpen(false)}>
                     <XMarkIcon className="w-6 h-6" />
                   </button>
                 </div>
                 <div className="space-y-2">
-                  {categories.map(([cat, themeData]) => (
-                    <button
-                      key={cat}
-                      onClick={() => {
-                        setCategory(cat);
-                        setMobileFiltersOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 flex items-center gap-3"
-                      style={{
-                        background:
-                          category === cat
-                            ? `${themeData.accent}15`
-                            : "transparent",
-                        color: category === cat ? themeData.accent : "#374151",
-                        fontWeight: category === cat ? 600 : 400,
-                      }}
-                    >
-                      <div
-                        className="w-3 h-3 rounded-full flex-shrink-0"
-                        style={{ background: themeData.gradient }}
-                      />
-                      <span className="flex-1">{themeData.name}</span>
-                    </button>
-                  ))}
+                  <Link
+                    to="/"
+                    onClick={() => setMobileFiltersOpen(false)}
+                    className="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 flex items-center gap-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                  >
+                    Home
+                  </Link>
+                  <Link
+                    to="/shop"
+                    onClick={() => setMobileFiltersOpen(false)}
+                    className="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 flex items-center gap-3 font-semibold"
+                    style={{ color: theme.accent }}
+                  >
+                    Shop
+                  </Link>
+                  <Link
+                    to="/about"
+                    onClick={() => setMobileFiltersOpen(false)}
+                    className="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 flex items-center gap-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                  >
+                    About
+                  </Link>
+                  <Link
+                    to="/contact"
+                    onClick={() => setMobileFiltersOpen(false)}
+                    className="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 flex items-center gap-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                  >
+                    Contact
+                  </Link>
                 </div>
               </motion.div>
             </motion.div>

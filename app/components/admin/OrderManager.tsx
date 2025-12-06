@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, TrashIcon, CheckIcon, ClockIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { useAdminStore, type Order, type OrderStatus } from "../../stores/useAdminStore";
+import { OrderDetailModal } from "./OrderDetailModal";
 
 const ORDER_STATUSES: OrderStatus[] = ["Pending", "Completed", "Failed"];
 
@@ -14,6 +15,9 @@ export function OrderManager() {
   const [newStatus, setNewStatus] = useState<OrderStatus>("Pending");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [toast, setToast] = useState<{ isOpen: boolean; message: string; type: 'success' | 'error' }>({ isOpen: false, message: "", type: 'success' });
 
   const filteredOrders = orders.filter((order) => {
     const matchesSearch =
@@ -38,12 +42,16 @@ export function OrderManager() {
     if (deleteConfirm.orderId) {
       deleteOrder(deleteConfirm.orderId);
       setDeleteConfirm({ isOpen: false, orderId: null });
+      setToast({ isOpen: true, message: "Order deleted successfully!", type: 'success' });
+      setTimeout(() => setToast({ isOpen: false, message: "", type: 'success' }), 3000);
     }
   };
 
   const handleStatusUpdate = (orderId: string, status: OrderStatus) => {
     updateOrder(orderId, { status });
     setEditingId(null);
+    setToast({ isOpen: true, message: `Order status updated to ${status}!`, type: 'success' });
+    setTimeout(() => setToast({ isOpen: false, message: "", type: 'success' }), 3000);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,11 +59,27 @@ export function OrderManager() {
     setCurrentPage(1);
   };
 
+  const handleViewDetails = (order: Order) => {
+    setSelectedOrder(order);
+    setDetailModalOpen(true);
+  };
+
   // Count orders by status
   const statusCounts = {
     Pending: orders.filter(o => o.status === "Pending").length,
     Completed: orders.filter(o => o.status === "Completed").length,
     Failed: orders.filter(o => o.status === "Failed").length,
+  };
+
+  const getStatusIcon = (status: OrderStatus) => {
+    switch (status) {
+      case "Pending":
+        return <ClockIcon className="w-6 h-6 text-yellow-400" />;
+      case "Completed":
+        return <CheckIcon className="w-6 h-6 text-green-400" />;
+      case "Failed":
+        return <XCircleIcon className="w-6 h-6 text-red-400" />;
+    }
   };
 
   return (
@@ -84,8 +108,13 @@ export function OrderManager() {
               key={status}
               className={`bg-gradient-to-br ${color} bg-opacity-10 border border-gray-700/50 rounded-xl p-6 backdrop-blur hover:border-gray-600/80 transition-all`}
             >
-              <p className="text-white text-sm font-medium">{label}</p>
-              <p className="text-3xl font-bold text-white mt-2">{count}</p>
+              <div className="flex items-start justify-between mb-3">
+                <p className="text-white text-sm font-medium">{label}</p>
+                <div className="flex-shrink-0">
+                  {getStatusIcon(status)}
+                </div>
+              </div>
+              <p className="text-3xl font-bold text-white">{count}</p>
             </motion.div>
           ))}
         </div>
@@ -158,7 +187,8 @@ export function OrderManager() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="hover:bg-gray-700/30 transition-colors"
+                      className="hover:bg-gray-700/30 transition-colors cursor-pointer"
+                      onClick={() => handleViewDetails(order)}
                     >
                       <td className="px-6 py-4">
                         <p className="font-medium text-white">{order.orderNumber}</p>
@@ -174,7 +204,7 @@ export function OrderManager() {
                           GHC {order.totalAmount.toFixed(2)}
                         </p>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
                         {editingId === order.id ? (
                           <div className="flex gap-2">
                             <select
@@ -220,7 +250,7 @@ export function OrderManager() {
                           {new Date(order.createdAt).toLocaleDateString()}
                         </p>
                       </td>
-                      <td className="px-6 py-4 text-right">
+                      <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => {
@@ -328,6 +358,38 @@ export function OrderManager() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Order Detail Modal */}
+      <OrderDetailModal
+        order={selectedOrder}
+        isOpen={detailModalOpen}
+        onClose={() => setDetailModalOpen(false)}
+        onStatusChange={(orderId, status) => {
+          handleStatusUpdate(orderId, status);
+          setDetailModalOpen(false);
+        }}
+      />
+
+      {/* Toast Notification */}
+      {toast.isOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          className={`fixed bottom-8 right-8 px-6 py-4 rounded-lg shadow-lg z-[9999] flex items-center gap-3 ${
+            toast.type === 'success'
+              ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white'
+              : 'bg-gradient-to-r from-red-600 to-orange-600 text-white'
+          }`}
+        >
+          <div className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-sm ${
+            toast.type === 'success' ? 'bg-white text-green-600' : 'bg-white text-red-600'
+          }`}>
+            {toast.type === 'success' ? '✓' : '✕'}
+          </div>
+          <span className="font-medium">{toast.message}</span>
+        </motion.div>
+      )}
     </>
   );
 }

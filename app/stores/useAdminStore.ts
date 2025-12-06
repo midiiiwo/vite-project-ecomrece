@@ -47,6 +47,9 @@ type AdminStore = {
   getOrder: (id: string) => Order | undefined;
   addNotification: (notification: Omit<AdminNotification, "id" | "createdAt">) => void;
   markNotificationAsRead: (id: string) => void;
+  markNotificationAsUnread: (id: string) => void;
+  toggleNotificationReadStatus: (id: string) => void;
+  markAllNotificationsAsRead: () => void;
   clearNotifications: () => void;
   getUnreadCount: () => number;
   setError: (error: string | null) => void;
@@ -526,6 +529,31 @@ export const useAdminStore = create<AdminStore>()(
           notifications: state.notifications.map((notif) =>
             notif.id === id ? { ...notif, read: true } : notif
           ),
+        }));
+      },
+
+      markNotificationAsUnread: (id) => {
+        set((state) => ({
+          notifications: state.notifications.map((notif) =>
+            notif.id === id ? { ...notif, read: false } : notif
+          ),
+        }));
+      },
+
+      toggleNotificationReadStatus: (id) => {
+        set((state) => ({
+          notifications: state.notifications.map((notif) =>
+            notif.id === id ? { ...notif, read: !notif.read } : notif
+          ),
+        }));
+      },
+
+      markAllNotificationsAsRead: () => {
+        set((state) => ({
+          notifications: state.notifications.map((notif) => ({
+            ...notif,
+            read: true,
+          })),
         }));
       },
 

@@ -11,6 +11,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { Cart } from "./components/Cart";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { SidebarProvider } from "./contexts/SidebarContext";
 import { errorLogger } from "./utils/errorLogger";
 import { useGlobalErrorHandler } from "./hooks/useGlobalErrorHandler";
 
@@ -50,10 +51,12 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <ErrorBoundaryWrapper>
-        <Outlet />
-        <Cart />
-      </ErrorBoundaryWrapper>
+      <SidebarProvider>
+        <ErrorBoundaryWrapper>
+          <Outlet />
+          <Cart />
+        </ErrorBoundaryWrapper>
+      </SidebarProvider>
     </ThemeProvider>
   );
 }

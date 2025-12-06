@@ -3,14 +3,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PencilIcon, TrashIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useAdminStore } from "../../stores/useAdminStore";
 import { ProductForm } from "./ProductForm";
+import { CategoryModal } from "./CategoryModal";
 import type { Product } from "../../stores/useStore";
 
 export function ProductManager() {
   const { products, addProduct, updateProduct, deleteProduct } = useAdminStore();
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const [categories, setCategories] = useState<string[]>(() => 
+    Array.from(new Set(products.map((p) => p.category))).sort()
+  );
   const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; productId: string | null }>({ isOpen: false, productId: null });
   const [toast, setToast] = useState<{ isOpen: boolean; message: string; type: 'success' | 'error' }>({ isOpen: false, message: "", type: 'success' });
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,7 +25,13 @@ export function ProductManager() {
     ? products.find((p) => p.id === editingId)
     : undefined;
 
-  const categories = Array.from(new Set(products.map((p) => p.category))).sort();
+  const handleAddCategory = (categoryName: string) => {
+    if (!categories.includes(categoryName)) {
+      setCategories([...categories, categoryName].sort());
+      setToast({ isOpen: true, message: `Category "${categoryName}" added successfully!`, type: 'success' });
+      setTimeout(() => setToast({ isOpen: false, message: "", type: 'success' }), 3000);
+    }
+  };
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
@@ -102,17 +113,26 @@ export function ProductManager() {
             Manage your product catalog ({filteredProducts.length} products)
           </p>
         </div>
-        <button
-          onClick={() => {
-            setEditingId(null);
-            setIsFormOpen(true);
-          }}
-          disabled={isFormOpen}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 disabled:opacity-50 shadow-lg hover:shadow-blue-500/30"
-        >
-          <PlusIcon className="w-5 h-5" />
-          Add Product
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={() => setIsCategoryModalOpen(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/30"
+          >
+            <PlusIcon className="w-5 h-5" />
+            Add Category
+          </button>
+          <button
+            onClick={() => {
+              setEditingId(null);
+              setIsFormOpen(true);
+            }}
+            disabled={isFormOpen}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 disabled:opacity-50 shadow-lg hover:shadow-blue-500/30"
+          >
+            <PlusIcon className="w-5 h-5" />
+            Add Product
+          </button>
+        </div>
       </div>
 
       {/* Form Modal */}
@@ -353,7 +373,7 @@ export function ProductManager() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className={`fixed bottom-8 right-8 px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3 ${
+            className={`fixed bottom-8 right-8 px-6 py-4 rounded-lg shadow-lg z-[9999] flex items-center gap-3 ${
               toast.type === 'success'
                 ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white'
                 : 'bg-gradient-to-r from-red-600 to-orange-600 text-white'
@@ -368,6 +388,13 @@ export function ProductManager() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Category Modal */}
+      <CategoryModal
+        isOpen={isCategoryModalOpen}
+        onClose={() => setIsCategoryModalOpen(false)}
+        onSubmit={handleAddCategory}
+      />
     </>
   );
 }

@@ -1,14 +1,21 @@
 import { Link } from "react-router";
 import { motion } from "framer-motion";
-import { Bars3Icon, XMarkIcon, ArrowRightStartOnRectangleIcon, CubeIcon, WindowIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon, ArrowRightStartOnRectangleIcon, CubeIcon, WindowIcon, Cog6ToothIcon, BellIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import { useSidebar } from "../../contexts/SidebarContext";
 
 interface AdminNavProps {
-  currentTab: "dashboard" | "products" | "settings" | "orders";
+  currentTab: "dashboard" | "products" | "categories" | "settings" | "orders" | "notifications";
 }
 
 export function AdminNav({ currentTab }: AdminNavProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { isExpanded: sidebarExpanded, toggleSidebar } = useSidebar();
+
+  // Store expanded state in localStorage
+  const handleToggleSidebar = (value: boolean) => {
+    toggleSidebar(value);
+  };
 
   const navItems: Array<{
     id: string;
@@ -35,6 +42,16 @@ export function AdminNav({ currentTab }: AdminNavProps) {
       color: "from-blue-500 to-cyan-600",
     },
     {
+      id: "categories",
+      label: "Categories",
+      icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.887.887 2.318.887 3.205 0l5.734-5.734c.887-.887.887-2.318 0-3.205L9.591 3.659A2.25 2.25 0 0 0 9.568 3Z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6Z" />
+            </svg>,
+      href: "/admin/categories",
+      color: "from-amber-500 to-orange-600",
+    },
+    {
       id: "orders",
       label: "Orders",
       icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -43,6 +60,13 @@ export function AdminNav({ currentTab }: AdminNavProps) {
             ,
       href: "/admin/orders",
       color: "from-green-500 to-emerald-600",
+    },
+    {
+      id: "notifications",
+      label: "Notifications",
+      icon: <BellIcon className="w-5 h-5" />,
+      href: "/admin/notifications",
+      color: "from-indigo-500 to-purple-600",
     },
     {
       id: "settings",
@@ -76,20 +100,45 @@ export function AdminNav({ currentTab }: AdminNavProps) {
       )}
 
       {/* Sidebar Navigation */}
-      <aside className={`fixed left-0 top-0 w-64 bg-gradient-to-b from-gray-900 via-gray-900 to-black text-white min-h-screen flex flex-col border-r border-gray-800 z-40 transition-transform duration-300 md:translate-x-0 ${
-        mobileOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}>
+      <aside className={`fixed left-0 top-0 text-white min-h-screen flex flex-col border-r border-gray-800 z-40 transition-all duration-300 md:translate-x-0 bg-gradient-to-b from-gray-900 via-gray-900 to-black ${
+        mobileOpen ? 'translate-x-0 w-64' : '-translate-x-full md:translate-x-0'
+      } ${!sidebarExpanded ? 'md:w-20' : 'md:w-64'}`}>
         {/* Logo */}
-        <div className="p-6 border-b border-gray-800/50">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">LP</span>
-            </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-              Admin
-            </h1>
-          </div>
-          <p className="text-gray-400 text-sm">LuxeShop Management</p>
+        <div className={`p-4 md:p-6 border-b border-gray-800/50 transition-all duration-300 flex items-center justify-between ${!sidebarExpanded ? 'md:justify-center md:px-2' : ''}`}>
+          {sidebarExpanded || mobileOpen ? (
+            <>
+              <div className={`flex items-center gap-2 ${!sidebarExpanded ? 'md:gap-0' : ''}`}>
+                <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-bold text-sm">LP</span>
+                </div>
+                {(sidebarExpanded || mobileOpen) && (
+                  <div className="hidden md:block">
+                    <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                      Admin
+                    </h1>
+                    <p className="text-gray-400 text-xs">LuxeShop</p>
+                  </div>
+                )}
+              </div>
+              {sidebarExpanded && (
+                <button
+                  onClick={() => handleToggleSidebar(!sidebarExpanded)}
+                  className="hidden md:block text-gray-400 hover:text-white transition-colors"
+                  title="Collapse"
+                >
+                  <ChevronLeftIcon className="w-5 h-5" />
+                </button>
+              )}
+            </>
+          ) : (
+            <button
+              onClick={() => handleToggleSidebar(true)}
+              className="hidden md:block text-gray-400 hover:text-white transition-colors w-full flex justify-center"
+              title="Expand"
+            >
+              <ChevronRightIcon className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
         {/* Navigation */}
@@ -97,7 +146,7 @@ export function AdminNav({ currentTab }: AdminNavProps) {
           {navItems.map(({ id, label, icon, href, color }) => {
             const isActive = currentTab === id;
             return (
-              <motion.div key={id} whileHover={{ x: 2 }} transition={{ duration: 0.2 }}>
+              <motion.div key={id} whileHover={{ x: sidebarExpanded ? 2 : 0 }} transition={{ duration: 0.2 }}>
                 <Link
                   to={href}
                   onClick={() => setMobileOpen(false)}
@@ -105,7 +154,8 @@ export function AdminNav({ currentTab }: AdminNavProps) {
                     isActive
                       ? `bg-gradient-to-r ${color} text-white font-semibold shadow-lg shadow-indigo-500/30`
                       : "text-gray-300 hover:bg-gray-800/50"
-                  }`}
+                  } ${!sidebarExpanded ? 'md:justify-center md:px-0 md:w-fit' : ''}`}
+                  title={!sidebarExpanded ? label : undefined}
                 >
                   {isActive && (
                     <motion.div
@@ -116,8 +166,8 @@ export function AdminNav({ currentTab }: AdminNavProps) {
                       transition={{ duration: 0.3 }}
                     />
                   )}
-                  <div className="w-5 h-5 relative z-10 flex items-center justify-center">{icon}</div>
-                  <span className="relative z-10">{label}</span>
+                  <div className="w-5 h-5 relative z-10 flex items-center justify-center flex-shrink-0">{icon}</div>
+                  {(sidebarExpanded || mobileOpen) && <span className="relative z-10">{label}</span>}
                 </Link>
               </motion.div>
             );
@@ -125,14 +175,15 @@ export function AdminNav({ currentTab }: AdminNavProps) {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-800/50 space-y-2">
+        <div className={`p-4 border-t border-gray-800/50 space-y-2 transition-all duration-300 ${!sidebarExpanded ? 'md:flex md:justify-center md:p-2' : ''}`}>
           <Link
             to="/"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all duration-300 w-full group"
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all duration-300 w-full group ${!sidebarExpanded ? 'md:justify-center md:w-fit md:px-0' : ''}`}
+            title={!sidebarExpanded ? "Back to Shop" : undefined}
           >
-            <ArrowRightStartOnRectangleIcon className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            <span>Back to Shop</span>
+            <ArrowRightStartOnRectangleIcon className="w-5 h-5 group-hover:-translate-x-1 transition-transform flex-shrink-0" />
+            {(sidebarExpanded || mobileOpen) && <span>Back to Shop</span>}
           </Link>
         </div>
       </aside>

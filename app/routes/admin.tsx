@@ -8,6 +8,7 @@ import { useAdminStore } from "../stores/useAdminStore";
 import type { Product } from "../stores/useStore";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router";
+import { useSidebar } from "../contexts/SidebarContext";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -22,6 +23,7 @@ export function meta({}: Route.MetaArgs) {
 export default function AdminDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const { isExpanded: sidebarExpanded } = useSidebar();
   const { addProduct, products, orders, notifications, getUnreadCount, markNotificationAsRead } = useAdminStore();
   const [toast, setToast] = useState<{ isOpen: boolean; message: string; type: 'success' | 'error' }>({ isOpen: false, message: "", type: 'success' });
 
@@ -47,7 +49,9 @@ export default function AdminDashboard() {
     <div className="flex min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
       <AdminNav currentTab="dashboard" />
 
-      <main className="flex-1 overflow-auto ml-0 md:ml-64">
+      <main className={`flex-1 overflow-auto transition-all duration-300 ${
+        sidebarExpanded ? 'ml-0 md:ml-64' : 'ml-0 md:ml-20'
+      }`}>
         <div className="p-4 md:p-8">
           <div className="max-w-7xl">
             {/* Header with Notifications */}
@@ -279,17 +283,25 @@ function QuickActionButton({
   iconColor: string;
   onClick?: () => void;
 }) {
-  const handleClick = (e: React.MouseEvent) => {
-    if (onClick) {
-      e.preventDefault();
-      onClick();
-    }
-  };
+  if (onClick) {
+    return (
+      <button
+        onClick={onClick}
+        className="block w-full text-left p-6 rounded-xl border border-gray-700/50 bg-gray-800/30 hover:bg-gray-700/50 hover:border-indigo-500/50 transition-all duration-300 group cursor-pointer backdrop-blur"
+      >
+        <div className="flex items-start justify-between mb-3">
+          <div />
+          <span className={`text-2xl group-hover:scale-110 transition-transform ${iconColor}`}>{icon}</span>
+        </div>
+        <h3 className="font-semibold text-white group-hover:text-indigo-300 transition-colors">{title}</h3>
+        <p className="text-sm text-gray-400 mt-1 group-hover:text-gray-300 transition-colors">{description}</p>
+      </button>
+    );
+  }
 
   return (
-    <a
-      href={href}
-      onClick={handleClick}
+    <Link
+      to={href || "#"}
       className="block p-6 rounded-xl border border-gray-700/50 bg-gray-800/30 hover:bg-gray-700/50 hover:border-indigo-500/50 transition-all duration-300 group cursor-pointer backdrop-blur"
     >
       <div className="flex items-start justify-between mb-3">
@@ -298,6 +310,6 @@ function QuickActionButton({
       </div>
       <h3 className="font-semibold text-white group-hover:text-indigo-300 transition-colors">{title}</h3>
       <p className="text-sm text-gray-400 mt-1 group-hover:text-gray-300 transition-colors">{description}</p>
-    </a>
+    </Link>
   );
 }
