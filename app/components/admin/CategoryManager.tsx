@@ -4,7 +4,7 @@ import { PencilIcon, TrashIcon, PlusIcon, XMarkIcon, CheckIcon } from "@heroicon
 import { useAdminStore } from "../../stores/useAdminStore";
 
 export function CategoryManager() {
-  const { products, addProduct } = useAdminStore();
+  const { products } = useAdminStore();
   
   // Get unique categories from products
   const [categories, setCategories] = useState<Array<{ name: string; productCount: number }>>(() => {
