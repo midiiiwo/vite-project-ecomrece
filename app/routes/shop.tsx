@@ -238,7 +238,7 @@ export default function Shop() {
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-bold text-gray-900">
-                    Navigation
+                    LuxeShop
                   </h2>
                   <button onClick={() => setMobileFiltersOpen(false)}>
                     <XMarkIcon className="w-6 h-6" />
