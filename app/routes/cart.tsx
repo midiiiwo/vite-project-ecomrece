@@ -121,7 +121,7 @@ export default function CartPage() {
                         className="text-2xl font-bold"
                         style={{ color: theme.accent }}
                       >
-                        ${(item.price * item.quantity).toFixed(2)}
+                        GHC {(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -144,7 +144,7 @@ export default function CartPage() {
                   <div className="flex justify-between">
                     <span className="text-gray-600">Subtotal</span>
                     <span className="font-semibold">
-                      ${getTotal().toFixed(2)}
+                      GHC {getTotal().toFixed(2)}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -157,7 +157,7 @@ export default function CartPage() {
                       className="text-2xl font-bold"
                       style={{ color: theme.accent }}
                     >
-                      ${getTotal().toFixed(2)}
+                      GHC {getTotal().toFixed(2)}
                     </span>
                   </div>
                 </div>

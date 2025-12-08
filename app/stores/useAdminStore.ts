@@ -2,14 +2,56 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Product } from "./useStore";
 
+export type OrderStatus = "Pending" | "Completed" | "Failed";
+
+export type Order = {
+  id: string;
+  orderNumber: string;
+  customerName: string;
+  customerEmail: string;
+  totalAmount: number;
+  status: OrderStatus;
+  items: Array<{
+    productId: string;
+    productName: string;
+    quantity: number;
+    price: number;
+  }>;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type AdminNotification = {
+  id: string;
+  type: "order_created" | "product_added" | "order_completed" | "order_failed";
+  title: string;
+  message: string;
+  read: boolean;
+  createdAt: Date;
+  metadata?: Record<string, unknown>;
+};
+
 type AdminStore = {
   products: Product[];
+  orders: Order[];
+  notifications: AdminNotification[];
   isLoading: boolean;
   error: string | null;
   addProduct: (product: Omit<Product, "id">) => void;
   updateProduct: (id: string, product: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
   getProduct: (id: string) => Product | undefined;
+  addOrder: (order: Omit<Order, "id">) => void;
+  updateOrder: (id: string, order: Partial<Order>) => void;
+  deleteOrder: (id: string) => void;
+  getOrder: (id: string) => Order | undefined;
+  addNotification: (notification: Omit<AdminNotification, "id" | "createdAt">) => void;
+  markNotificationAsRead: (id: string) => void;
+  markNotificationAsUnread: (id: string) => void;
+  toggleNotificationReadStatus: (id: string) => void;
+  markAllNotificationsAsRead: () => void;
+  clearNotifications: () => void;
+  getUnreadCount: () => number;
   setError: (error: string | null) => void;
   setLoading: (loading: boolean) => void;
 };
@@ -26,6 +68,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Fashion",
           description: "Soft, breathable cotton t-shirt for everyday wear",
           image: "",
+          specs: ["100% Cotton", "Machine Washable", "Available sizes: XS-XXL"],
+          features: ["Breathable", "Durable", "Fade-resistant"],
+          rating: 4.5,
+          reviews: 128,
+          stock: 45,
         },
         {
           id: "fashion-2",
@@ -34,6 +81,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Fashion",
           description: "Classic fit denim jeans with modern styling",
           image: "",
+          specs: ["98% Cotton, 2% Elastane", "Slim Fit", "Waist sizes: 28-38"],
+          features: ["Stretchable", "Comfortable fit", "Premium denim"],
+          rating: 4.7,
+          reviews: 256,
+          stock: 62,
         },
         {
           id: "fashion-3",
@@ -42,6 +94,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Fashion",
           description: "Genuine leather jacket with premium finish",
           image: "",
+          specs: ["100% Genuine Leather", "Inner lining", "Metal zippers"],
+          features: ["Premium quality", "Weather resistant", "Timeless style"],
+          rating: 4.8,
+          reviews: 89,
+          stock: 18,
         },
         {
           id: "fashion-4",
@@ -50,6 +107,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Fashion",
           description: "Light and breezy dress perfect for summer",
           image: "",
+          specs: ["100% Rayon", "Floor length", "Sizes: XS-XL"],
+          features: ["Lightweight", "Breathable", "Easy care"],
+          rating: 4.4,
+          reviews: 142,
+          stock: 73,
         },
         {
           id: "fashion-5",
@@ -58,6 +120,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Fashion",
           description: "Crisp formal shirt for professional occasions",
           image: "",
+          specs: ["100% Cotton Poplin", "Spread collar", "Neck: 14-17.5"],
+          features: ["Wrinkle-free finish", "Professional look", "Easy iron"],
+          rating: 4.6,
+          reviews: 195,
+          stock: 51,
         },
         {
           id: "fashion-6",
@@ -66,6 +133,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Fashion",
           description: "Versatile blazer for smart casual looks",
           image: "",
+          specs: ["65% Polyester, 35% Cotton", "Single breasted", "Sizes: XS-XL"],
+          features: ["Lightweight", "Versatile", "Structured fit"],
+          rating: 4.7,
+          reviews: 114,
+          stock: 38,
         },
 
         // Electronics products
@@ -76,6 +148,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Electronics",
           description: "Premium noise-cancelling wireless headphones",
           image: "",
+          specs: ["Active Noise Cancellation", "30-hour battery", "Bluetooth 5.0"],
+          features: ["Comfort fit", "Built-in microphone", "Touch controls"],
+          rating: 4.8,
+          reviews: 412,
+          stock: 34,
         },
         {
           id: "electronics-2",
@@ -84,6 +161,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Electronics",
           description: "Voice-activated smart speaker with AI assistant",
           image: "",
+          specs: ["WiFi enabled", "360° sound", "Voice control"],
+          features: ["AI assistant", "Music streaming", "Home automation"],
+          rating: 4.5,
+          reviews: 287,
+          stock: 56,
         },
         {
           id: "electronics-3",
@@ -92,6 +174,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Electronics",
           description: "Ultra HD 27-inch display for work and gaming",
           image: "",
+          specs: ["27-inch 4K UHD", "60Hz refresh rate", "USB-C connectivity"],
+          features: ["Color accurate", "HDR support", "Height adjustable"],
+          rating: 4.7,
+          reviews: 156,
+          stock: 22,
         },
         {
           id: "electronics-4",
@@ -100,6 +187,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Electronics",
           description: "RGB backlit mechanical gaming keyboard",
           image: "",
+          specs: ["Cherry MX switches", "RGB backlighting", "Programmable keys"],
+          features: ["Gaming grade", "Durable", "Customizable"],
+          rating: 4.6,
+          reviews: 231,
+          stock: 41,
         },
         {
           id: "electronics-5",
@@ -108,6 +200,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Electronics",
           description: "High definition webcam for video calls",
           image: "",
+          specs: ["1080p HD", "Auto-focus", "Built-in microphone"],
+          features: ["USB plug & play", "Wide angle lens", "Low light correction"],
+          rating: 4.4,
+          reviews: 178,
+          stock: 67,
         },
         {
           id: "electronics-6",
@@ -116,6 +213,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Electronics",
           description: "20,000mAh power bank with fast charging",
           image: "",
+          specs: ["20,000mAh capacity", "18W fast charge", "2 USB ports"],
+          features: ["Lightweight", "LED display", "Multi-device compatible"],
+          rating: 4.5,
+          reviews: 389,
+          stock: 103,
         },
 
         // Footwear products
@@ -126,6 +228,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Footwear",
           description: "Lightweight running shoes with excellent cushioning",
           image: "",
+          specs: ["Memory foam insole", "Breathable mesh", "Sizes: 5-14"],
+          features: ["Lightweight", "Cushioned", "Anti-slip sole"],
+          rating: 4.7,
+          reviews: 245,
+          stock: 58,
         },
         {
           id: "footwear-2",
@@ -134,6 +241,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Footwear",
           description: "Durable leather boots for all seasons",
           image: "",
+          specs: ["100% Genuine Leather", "Lug sole", "Sizes: 5-13"],
+          features: ["Water resistant", "Durable", "Comfortable fit"],
+          rating: 4.8,
+          reviews: 167,
+          stock: 29,
         },
         {
           id: "footwear-3",
@@ -142,6 +254,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Footwear",
           description: "Classic canvas sneakers in multiple colors",
           image: "",
+          specs: ["100% Canvas", "Rubber sole", "Sizes: 5-14"],
+          features: ["Versatile", "Lightweight", "Easy to clean"],
+          rating: 4.5,
+          reviews: 312,
+          stock: 89,
         },
         {
           id: "footwear-4",
@@ -150,6 +267,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Footwear",
           description: "Elegant formal shoes for professional settings",
           image: "",
+          specs: ["Genuine leather", "Cushioned insole", "Sizes: 6-13"],
+          features: ["Professional look", "Comfortable", "Premium finish"],
+          rating: 4.7,
+          reviews: 134,
+          stock: 35,
         },
 
         // Accessories
@@ -160,6 +282,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Accessories",
           description: "Genuine leather bi-fold wallet",
           image: "",
+          specs: ["100% Genuine Leather", "6 card slots", "Billfold design"],
+          features: ["Durable", "RFID protection", "Quality stitching"],
+          rating: 4.6,
+          reviews: 201,
+          stock: 74,
         },
         {
           id: "accessories-2",
@@ -168,6 +295,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Accessories",
           description: "UV protection sunglasses with premium frames",
           image: "",
+          specs: ["UV400 protection", "Polarized lenses", "Designer frames"],
+          features: ["Style & protection", "Lightweight", "Case included"],
+          rating: 4.7,
+          reviews: 163,
+          stock: 42,
         },
         {
           id: "accessories-3",
@@ -176,6 +308,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Accessories",
           description: "Classic leather belt with silver buckle",
           image: "",
+          specs: ["Genuine Leather", "Metal buckle", "Sizes: 28-40"],
+          features: ["Classic design", "Premium quality", "Versatile"],
+          rating: 4.5,
+          reviews: 145,
+          stock: 81,
         },
         {
           id: "accessories-4",
@@ -184,6 +321,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Accessories",
           description: "Spacious backpack with laptop compartment",
           image: "",
+          specs: ["30L capacity", "Laptop sleeve", "Water-resistant"],
+          features: ["Ergonomic design", "Multiple compartments", "Durable material"],
+          rating: 4.6,
+          reviews: 218,
+          stock: 53,
         },
 
         // Smart Watches
@@ -194,6 +336,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Smart Watches",
           description: "Track your health and fitness goals",
           image: "",
+          specs: ["Heart rate monitor", "7-day battery", "Water resistant"],
+          features: ["Activity tracking", "Sleep monitoring", "Notifications"],
+          rating: 4.6,
+          reviews: 287,
+          stock: 44,
         },
         {
           id: "smartwatches-2",
@@ -202,6 +349,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Smart Watches",
           description: "Full-featured smartwatch with GPS",
           image: "",
+          specs: ["GPS enabled", "3-day battery", "AMOLED display"],
+          features: ["Fitness tracking", "Contactless payment", "Phone integration"],
+          rating: 4.8,
+          reviews: 156,
+          stock: 23,
         },
 
         // Fragrances
@@ -212,6 +364,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Fragrances",
           description: "Elegant fragrance for special occasions",
           image: "",
+          specs: ["100ml bottle", "Eau de Parfum", "Long-lasting"],
+          features: ["Premium scent", "Elegant packaging", "Unisex"],
+          rating: 4.7,
+          reviews: 95,
+          stock: 36,
         },
         {
           id: "sprays-2",
@@ -220,6 +377,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Fragrances",
           description: "Fresh daily body spray",
           image: "",
+          specs: ["150ml bottle", "Fresh scent", "All day wear"],
+          features: ["Lightweight", "Refreshing", "Affordable"],
+          rating: 4.4,
+          reviews: 211,
+          stock: 127,
         },
 
         // Children
@@ -230,6 +392,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Children's Wear",
           description: "Comfortable cotton t-shirts for kids",
           image: "",
+          specs: ["100% Cotton", "3-piece set", "Sizes: 2-12 years"],
+          features: ["Soft & comfortable", "Colorful designs", "Easy care"],
+          rating: 4.5,
+          reviews: 176,
+          stock: 92,
         },
         {
           id: "children-2",
@@ -238,8 +405,52 @@ export const useAdminStore = create<AdminStore>()(
           category: "Children's Wear",
           description: "Durable and stylish sneakers for active kids",
           image: "",
+          specs: ["Breathable mesh", "Flexible sole", "Sizes: 10-4"],
+          features: ["Comfortable fit", "Durable", "Colorful designs"],
+          rating: 4.6,
+          reviews: 143,
+          stock: 68,
         },
       ],
+      orders: [
+        {
+          id: "order-1",
+          orderNumber: "ORD-001",
+          customerName: "John Doe",
+          customerEmail: "john@example.com",
+          totalAmount: 299.99,
+          status: "Pending",
+          items: [
+            {
+              productId: "fashion-1",
+              productName: "Premium Cotton T-Shirt",
+              quantity: 2,
+              price: 49.99,
+            },
+          ],
+          createdAt: new Date(Date.now() - 86400000),
+          updatedAt: new Date(Date.now() - 86400000),
+        },
+        {
+          id: "order-2",
+          orderNumber: "ORD-002",
+          customerName: "Jane Smith",
+          customerEmail: "jane@example.com",
+          totalAmount: 129.99,
+          status: "Completed",
+          items: [
+            {
+              productId: "electronics-1",
+              productName: "Wireless Headphones",
+              quantity: 1,
+              price: 199.99,
+            },
+          ],
+          createdAt: new Date(Date.now() - 172800000),
+          updatedAt: new Date(Date.now() - 172800000),
+        },
+      ],
+      notifications: [],
       isLoading: false,
       error: null,
 
@@ -270,6 +481,88 @@ export const useAdminStore = create<AdminStore>()(
 
       getProduct: (id) => {
         return get().products.find((product) => product.id === id);
+      },
+
+      addOrder: (orderData) => {
+        const id = `order-${Date.now()}`;
+        const newOrder: Order = {
+          ...orderData,
+          id,
+        };
+        set((state) => ({
+          orders: [...state.orders, newOrder],
+        }));
+      },
+
+      updateOrder: (id, updates) => {
+        set((state) => ({
+          orders: state.orders.map((order) =>
+            order.id === id ? { ...order, ...updates, updatedAt: new Date() } : order
+          ),
+        }));
+      },
+
+      deleteOrder: (id) => {
+        set((state) => ({
+          orders: state.orders.filter((order) => order.id !== id),
+        }));
+      },
+
+      getOrder: (id) => {
+        return get().orders.find((order) => order.id === id);
+      },
+
+      addNotification: (notificationData) => {
+        const id = `notif-${Date.now()}`;
+        const newNotification: AdminNotification = {
+          ...notificationData,
+          id,
+          createdAt: new Date(),
+        };
+        set((state) => ({
+          notifications: [newNotification, ...state.notifications],
+        }));
+      },
+
+      markNotificationAsRead: (id) => {
+        set((state) => ({
+          notifications: state.notifications.map((notif) =>
+            notif.id === id ? { ...notif, read: true } : notif
+          ),
+        }));
+      },
+
+      markNotificationAsUnread: (id) => {
+        set((state) => ({
+          notifications: state.notifications.map((notif) =>
+            notif.id === id ? { ...notif, read: false } : notif
+          ),
+        }));
+      },
+
+      toggleNotificationReadStatus: (id) => {
+        set((state) => ({
+          notifications: state.notifications.map((notif) =>
+            notif.id === id ? { ...notif, read: !notif.read } : notif
+          ),
+        }));
+      },
+
+      markAllNotificationsAsRead: () => {
+        set((state) => ({
+          notifications: state.notifications.map((notif) => ({
+            ...notif,
+            read: true,
+          })),
+        }));
+      },
+
+      clearNotifications: () => {
+        set({ notifications: [] });
+      },
+
+      getUnreadCount: () => {
+        return get().notifications.filter((notif) => !notif.read).length;
       },
 
       setError: (error) => {
