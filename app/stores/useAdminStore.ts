@@ -45,7 +45,9 @@ type AdminStore = {
   updateOrder: (id: string, order: Partial<Order>) => void;
   deleteOrder: (id: string) => void;
   getOrder: (id: string) => Order | undefined;
-  addNotification: (notification: Omit<AdminNotification, "id" | "createdAt">) => void;
+  addNotification: (
+    notification: Omit<AdminNotification, "id" | "createdAt">
+  ) => void;
   markNotificationAsRead: (id: string) => void;
   markNotificationAsUnread: (id: string) => void;
   toggleNotificationReadStatus: (id: string) => void;
@@ -133,7 +135,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Fashion",
           description: "Versatile blazer for smart casual looks",
           image: "",
-          specs: ["65% Polyester, 35% Cotton", "Single breasted", "Sizes: XS-XL"],
+          specs: [
+            "65% Polyester, 35% Cotton",
+            "Single breasted",
+            "Sizes: XS-XL",
+          ],
           features: ["Lightweight", "Versatile", "Structured fit"],
           rating: 4.7,
           reviews: 114,
@@ -148,7 +154,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Electronics",
           description: "Premium noise-cancelling wireless headphones",
           image: "",
-          specs: ["Active Noise Cancellation", "30-hour battery", "Bluetooth 5.0"],
+          specs: [
+            "Active Noise Cancellation",
+            "30-hour battery",
+            "Bluetooth 5.0",
+          ],
           features: ["Comfort fit", "Built-in microphone", "Touch controls"],
           rating: 4.8,
           reviews: 412,
@@ -187,7 +197,11 @@ export const useAdminStore = create<AdminStore>()(
           category: "Electronics",
           description: "RGB backlit mechanical gaming keyboard",
           image: "",
-          specs: ["Cherry MX switches", "RGB backlighting", "Programmable keys"],
+          specs: [
+            "Cherry MX switches",
+            "RGB backlighting",
+            "Programmable keys",
+          ],
           features: ["Gaming grade", "Durable", "Customizable"],
           rating: 4.6,
           reviews: 231,
@@ -201,7 +215,11 @@ export const useAdminStore = create<AdminStore>()(
           description: "High definition webcam for video calls",
           image: "",
           specs: ["1080p HD", "Auto-focus", "Built-in microphone"],
-          features: ["USB plug & play", "Wide angle lens", "Low light correction"],
+          features: [
+            "USB plug & play",
+            "Wide angle lens",
+            "Low light correction",
+          ],
           rating: 4.4,
           reviews: 178,
           stock: 67,
@@ -322,7 +340,11 @@ export const useAdminStore = create<AdminStore>()(
           description: "Spacious backpack with laptop compartment",
           image: "",
           specs: ["30L capacity", "Laptop sleeve", "Water-resistant"],
-          features: ["Ergonomic design", "Multiple compartments", "Durable material"],
+          features: [
+            "Ergonomic design",
+            "Multiple compartments",
+            "Durable material",
+          ],
           rating: 4.6,
           reviews: 218,
           stock: 53,
@@ -350,7 +372,11 @@ export const useAdminStore = create<AdminStore>()(
           description: "Full-featured smartwatch with GPS",
           image: "",
           specs: ["GPS enabled", "3-day battery", "AMOLED display"],
-          features: ["Fitness tracking", "Contactless payment", "Phone integration"],
+          features: [
+            "Fitness tracking",
+            "Contactless payment",
+            "Phone integration",
+          ],
           rating: 4.8,
           reviews: 156,
           stock: 23,
@@ -497,7 +523,9 @@ export const useAdminStore = create<AdminStore>()(
       updateOrder: (id, updates) => {
         set((state) => ({
           orders: state.orders.map((order) =>
-            order.id === id ? { ...order, ...updates, updatedAt: new Date() } : order
+            order.id === id
+              ? { ...order, ...updates, updatedAt: new Date() }
+              : order
           ),
         }));
       },
